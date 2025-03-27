@@ -2,9 +2,9 @@ name: Build and Push Docker Image
 
 on:
   push:
-    branches: [ "websu" ]
+    branches: [ "websu", "answerai-docker" ]
   pull_request:
-    branches: [ "websu" ]
+    branches: [ "websu", "answerai-docker" ]
 
 env:
   REGISTRY: ghcr.io
@@ -47,5 +47,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache-${{ runner.os }}-${{ runner.arch }}-websu
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache-${{ runner.os }}-${{ runner.arch }}-websu,mode=max
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache-${{ runner.os }}-${{ runner.arch }}-answerai
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache-${{ runner.os }}-${{ runner.arch }}-answerai,mode=max
