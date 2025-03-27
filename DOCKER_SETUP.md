@@ -64,13 +64,13 @@ If you're using a PAT, update the workflow file (`.github/workflows/docker-build
 
 ## Running the Workflow
 
-The workflow will automatically run when you push to the `websu` branch. You can also manually trigger it:
+The workflow will automatically run when you push to the `answerai-docker` branch. You can also manually trigger it:
 
 1. Go to your repository on GitHub
 2. Click on "Actions"
 3. Select the "Build and Push Docker Image" workflow
 4. Click "Run workflow"
-5. Select the `websu` branch
+5. Select the `answerai-docker` branch
 6. Click "Run workflow"
 
 ## Using the Docker Image
@@ -78,8 +78,8 @@ The workflow will automatically run when you push to the `websu` branch. You can
 Once the workflow completes successfully, you can pull and run the Docker image:
 
 ```bash
-docker pull ghcr.io/your-username/open-webui:websu
-docker run -p 8080:8080 ghcr.io/your-username/open-webui:websu
+docker pull ghcr.io/your-username/open-webui:answerai-docker
+docker run -p 8080:8080 ghcr.io/your-username/open-webui:answerai-docker
 ```
 
 Replace `your-username` with your GitHub username.
