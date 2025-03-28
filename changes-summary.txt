@@ -1,0 +1,36 @@
+# OpenWebUI to AnswerAI White Labeling Changes
+
+## Branding Changes
+1. Changed the application name from "Open WebUI" to "AnswerAI" in constants.ts
+2. Updated the package name in package.json from "open-webui" to "answerai"
+3. Updated meta tags in app.html to reference "AnswerAI" instead of "Open WebUI"
+4. Changed the title in app.html to "AnswerAI"
+5. Updated notification references in +layout.svelte to show "AnswerAI" instead of "Open WebUI"
+6. Performed a global search and replace to change all instances of "Open WebUI" to "AnswerAI"
+7. Updated URLs from openwebui.com to answerai.in
+8. Updated GitHub repository references
+
+## Feature Removals
+1. Removed the call functionality by removing the call button from the MessageInput component
+2. Removed the ChatControls component from the Chat component, which eliminates:
+   - System prompt controls
+   - Advanced parameters
+   - Valves system prompt
+3. Removed the version text from the Suggestions component
+4. Made the About section blank by removing all content from the About.svelte component
+
+## UI Modifications
+1. Renamed "WebUI Settings" to "Settings" in the General settings component
+2. Removed the language selection from the General settings component
+
+## Configuration
+1. Updated the vite.config.ts file to allow the application to be accessed from any host
+2. Set the port to 12000 for development server
+3. Added CORS headers to allow iframe embedding
+
+## Development Setup
+1. Installed all dependencies with npm install
+2. Configured the development server to run on port 12000
+3. Made the application accessible via the provided runtime URL
+
+The application has been successfully white labeled to AnswerAI branding, with all specified features removed or modified as requested. The core functionality remains intact while presenting a clean, rebranded interface.
