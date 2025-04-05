@@ -85,6 +85,7 @@ class CodeInterpreterConfigForm(BaseModel):
     CODE_INTERPRETER_JUPYTER_AUTH_TOKEN: Optional[str]
     CODE_INTERPRETER_JUPYTER_AUTH_PASSWORD: Optional[str]
     CODE_INTERPRETER_JUPYTER_TIMEOUT: Optional[int]
+    ENABLE_CALL_FEATURE: bool
 
 
 @router.get("/code_execution", response_model=CodeInterpreterConfigForm)
@@ -105,6 +106,7 @@ async def get_code_execution_config(request: Request, user=Depends(get_admin_use
         "CODE_INTERPRETER_JUPYTER_AUTH_TOKEN": request.app.state.config.CODE_INTERPRETER_JUPYTER_AUTH_TOKEN,
         "CODE_INTERPRETER_JUPYTER_AUTH_PASSWORD": request.app.state.config.CODE_INTERPRETER_JUPYTER_AUTH_PASSWORD,
         "CODE_INTERPRETER_JUPYTER_TIMEOUT": request.app.state.config.CODE_INTERPRETER_JUPYTER_TIMEOUT,
+        "ENABLE_CALL_FEATURE": request.app.state.config.ENABLE_CALL_FEATURE,
     }
 
 
@@ -155,6 +157,7 @@ async def set_code_execution_config(
     request.app.state.config.CODE_INTERPRETER_JUPYTER_TIMEOUT = (
         form_data.CODE_INTERPRETER_JUPYTER_TIMEOUT
     )
+    request.app.state.config.ENABLE_CALL_FEATURE = form_data.ENABLE_CALL_FEATURE
 
     return {
         "ENABLE_CODE_EXECUTION": request.app.state.config.ENABLE_CODE_EXECUTION,
@@ -172,6 +175,7 @@ async def set_code_execution_config(
         "CODE_INTERPRETER_JUPYTER_AUTH_TOKEN": request.app.state.config.CODE_INTERPRETER_JUPYTER_AUTH_TOKEN,
         "CODE_INTERPRETER_JUPYTER_AUTH_PASSWORD": request.app.state.config.CODE_INTERPRETER_JUPYTER_AUTH_PASSWORD,
         "CODE_INTERPRETER_JUPYTER_TIMEOUT": request.app.state.config.CODE_INTERPRETER_JUPYTER_TIMEOUT,
+        "ENABLE_CALL_FEATURE": request.app.state.config.ENABLE_CALL_FEATURE,
     }
 
 
