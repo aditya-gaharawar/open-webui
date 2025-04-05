@@ -100,6 +100,12 @@ log.setLevel(SRC_LOG_LEVELS["MAIN"])
 async def chat_completion_tools_handler(
     request: Request, body: dict, extra_params: dict, user: UserModel, models, tools
 ) -> tuple[dict, dict]:
+
+    # Check if the Call Feature (Tool Calling) is enabled globally
+    if not request.app.state.config.ENABLE_CALL_FEATURE:
+        log.debug("Call Feature (Tool Calling) is disabled globally. Skipping tool check.")
+        return body, {} # Return original body and empty sources
+
     async def get_content_from_response(response) -> Optional[str]:
         content = None
         if hasattr(response, "body_iterator"):
