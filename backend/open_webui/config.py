@@ -2580,3 +2580,10 @@ LDAP_CA_CERT_FILE = PersistentConfig(
 LDAP_CIPHERS = PersistentConfig(
     "LDAP_CIPHERS", "ldap.server.ciphers", os.environ.get("LDAP_CIPHERS", "ALL")
 )
+
+
+ENABLE_CALL_FEATURE = PersistentConfig(
+    "ENABLE_CALL_FEATURE",
+    # Default to True
+    os.environ.get("ENABLE_CALL_FEATURE", "True").lower() == "true",
+)
