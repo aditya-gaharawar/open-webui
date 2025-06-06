@@ -23,10 +23,10 @@ from open_webui.env import (
     REDIS_SENTINEL_PORT,
     FRONTEND_BUILD_DIR,
     OFFLINE_MODE,
-    OPEN_WEBUI_DIR,
+    OPEN_WEBUI_DIR as ANSWERAI_DIR_OLD,
     WEBUI_AUTH,
-    WEBUI_FAVICON_URL,
-    WEBUI_NAME,
+    WEBUI_FAVICON_URL as OLD_WEBUI_FAVICON_URL,
+    WEBUI_NAME as OLD_WEBUI_NAME,
     log,
 )
 from open_webui.internal.db import Base, get_db
@@ -41,6 +41,10 @@ class EndpointFilter(logging.Filter):
 # Filter out /endpoint
 logging.getLogger("uvicorn.access").addFilter(EndpointFilter())
 
+ANSWERAI_DIR = ANSWERAI_DIR_OLD
+WEBUI_NAME = PersistentConfig("WEBUI_NAME", "ui.name", os.environ.get("WEBUI_NAME", "answerai"))
+WEBUI_FAVICON_URL = PersistentConfig("WEBUI_FAVICON_URL", "ui.favicon_url", os.environ.get("WEBUI_FAVICON_URL", "/static/favicon.png"))
+
 ####################################
 # Config helpers
 ####################################
@@ -53,10 +57,10 @@ def run_migrations():
         from alembic import command
         from alembic.config import Config
 
-        alembic_cfg = Config(OPEN_WEBUI_DIR / "alembic.ini")
+        alembic_cfg = Config(ANSWERAI_DIR / "alembic.ini")
 
         # Set the script location dynamically
-        migrations_path = OPEN_WEBUI_DIR / "migrations"
+        migrations_path = ANSWERAI_DIR / "migrations"
         alembic_cfg.set_main_option("script_location", str(migrations_path))
 
         command.upgrade(alembic_cfg, "head")
@@ -230,7 +234,7 @@ class AppConfig:
             self._state[key].save()
 
             if self._redis:
-                redis_key = f"open-webui:config:{key}"
+                redis_key = f"answerai:config:{key}"
                 self._redis.set(redis_key, json.dumps(self._state[key].value))
 
     def __getattr__(self, key):
@@ -239,7 +243,7 @@ class AppConfig:
 
         # If Redis is available, check for an updated value
         if self._redis:
-            redis_key = f"open-webui:config:{key}"
+            redis_key = f"answerai:config:{key}"
             redis_value = self._redis.get(redis_key)
 
             if redis_value is not None:
@@ -620,7 +624,7 @@ load_oauth_providers()
 # Static DIR
 ####################################
 
-STATIC_DIR = Path(os.getenv("STATIC_DIR", OPEN_WEBUI_DIR / "static")).resolve()
+STATIC_DIR = Path(os.getenv("STATIC_DIR", ANSWERAI_DIR / "static")).resolve()
 
 for file_path in (FRONTEND_BUILD_DIR / "static").glob("**/*"):
     if file_path.is_file():
@@ -666,12 +670,12 @@ CUSTOM_NAME = os.environ.get("CUSTOM_NAME", "")
 
 if CUSTOM_NAME:
     try:
-        r = requests.get(f"https://api.openwebui.com/api/v1/custom/{CUSTOM_NAME}")
+        r = requests.get(f"https://api.answerai.in/api/v1/custom/{CUSTOM_NAME}")
         data = r.json()
         if r.ok:
             if "logo" in data:
-                WEBUI_FAVICON_URL = url = (
-                    f"https://api.openwebui.com{data['logo']}"
+                WEBUI_FAVICON_URL.value = url = (
+                    f"https://api.answerai.in{data['logo']}"
                     if data["logo"][0] == "/"
                     else data["logo"]
                 )
@@ -684,7 +688,7 @@ if CUSTOM_NAME:
 
             if "splash" in data:
                 url = (
-                    f"https://api.openwebui.com{data['splash']}"
+                    f"https://api.answerai.in{data['splash']}"
                     if data["splash"][0] == "/"
                     else data["splash"]
                 )
@@ -695,7 +699,7 @@ if CUSTOM_NAME:
                         r.raw.decode_content = True
                         shutil.copyfileobj(r.raw, f)
 
-            WEBUI_NAME = data["name"]
+            WEBUI_NAME.value = data["name"]
     except Exception as e:
         log.exception(e)
         pass
@@ -795,13 +799,13 @@ if OLLAMA_BASE_URL == "" and OLLAMA_API_BASE_URL != "":
 if ENV == "prod":
     if OLLAMA_BASE_URL == "/ollama" and not K8S_FLAG:
         if USE_OLLAMA_DOCKER.lower() == "true":
-            # if you use all-in-one docker container (Open WebUI + Ollama)
+            # if you use all-in-one docker container (answerai + Ollama)
             # with the docker build arg USE_OLLAMA=true (--build-arg="USE_OLLAMA=true") this only works with http://localhost:11434
             OLLAMA_BASE_URL = "http://localhost:11434"
         else:
             OLLAMA_BASE_URL = "http://host.docker.internal:11434"
     elif K8S_FLAG:
-        OLLAMA_BASE_URL = "http://ollama-service.open-webui.svc.cluster.local:11434"
+        OLLAMA_BASE_URL = "http://ollama-service.answerai.svc.cluster.local:11434"
 
 
 OLLAMA_BASE_URLS = os.environ.get("OLLAMA_BASE_URLS", "")
@@ -1773,7 +1777,7 @@ ELASTICSEARCH_PASSWORD = os.environ.get("ELASTICSEARCH_PASSWORD", None)
 ELASTICSEARCH_CLOUD_ID = os.environ.get("ELASTICSEARCH_CLOUD_ID", None)
 SSL_ASSERT_FINGERPRINT = os.environ.get("SSL_ASSERT_FINGERPRINT", None)
 ELASTICSEARCH_INDEX_PREFIX = os.environ.get(
-    "ELASTICSEARCH_INDEX_PREFIX", "open_webui_collections"
+    "ELASTICSEARCH_INDEX_PREFIX", "answerai_collections"
 )
 # Pgvector
 PGVECTOR_DB_URL = os.environ.get("PGVECTOR_DB_URL", DATABASE_URL)
@@ -1788,7 +1792,7 @@ PGVECTOR_INITIALIZE_MAX_VECTOR_LENGTH = int(
 # Pinecone
 PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY", None)
 PINECONE_ENVIRONMENT = os.environ.get("PINECONE_ENVIRONMENT", None)
-PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "open-webui-index")
+PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "answerai-index")
 PINECONE_DIMENSION = int(os.getenv("PINECONE_DIMENSION", 1536))  # or 3072, 1024, 768
 PINECONE_METRIC = os.getenv("PINECONE_METRIC", "cosine")
 PINECONE_CLOUD = os.getenv("PINECONE_CLOUD", "aws")  # or "gcp" or "azure"
@@ -2710,7 +2714,7 @@ COMFYUI_WORKFLOW = PersistentConfig(
 )
 
 COMFYUI_WORKFLOW_NODES = PersistentConfig(
-    "COMFYUI_WORKFLOW",
+    "COMFYUI_WORKFLOW_NODES",
     "image_generation.comfyui.nodes",
     [],
 )
@@ -2865,7 +2869,7 @@ AUDIO_TTS_ENGINE = PersistentConfig(
 AUDIO_TTS_MODEL = PersistentConfig(
     "AUDIO_TTS_MODEL",
     "audio.tts.model",
-    os.getenv("AUDIO_TTS_MODEL", "tts-1"),  # OpenAI default model
+    os.getenv("AUDIO_TTS_MODEL", "tts-1"),  # answerai default model
 )
 
 AUDIO_TTS_VOICE = PersistentConfig(
@@ -2914,7 +2918,7 @@ ENABLE_LDAP = PersistentConfig(
 LDAP_SERVER_LABEL = PersistentConfig(
     "LDAP_SERVER_LABEL",
     "ldap.server.label",
-    os.environ.get("LDAP_SERVER_LABEL", "LDAP Server"),
+    os.environ.get("LDAP_SERVER_LABEL", "answerai LDAP Server"),
 )
 
 LDAP_SERVER_HOST = PersistentConfig(
