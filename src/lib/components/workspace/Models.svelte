@@ -434,7 +434,8 @@
 											: 'bg-white'} rounded-2xl"
 									>
 										<img
-											src={model?.meta?.profile_image_url ?? `${ANSWERAI_BASE_URL}/static/favicon.png`}
+											src={model?.meta?.profile_image_url ??
+												`${ANSWERAI_BASE_URL}/static/favicon.png`}
 											alt="modelfile profile"
 											class=" rounded-2xl size-12 object-cover"
 										/>

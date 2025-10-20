@@ -245,9 +245,13 @@
 								<div class="mb-1">
 									<div class=" text-2xl font-medium">
 										{#if $config?.onboarding ?? false}
-											{$i18n.t(`Get started with {{ANSWERAI_NAME}}`, { ANSWERAI_NAME: $ANSWERAI_NAME })}
+											{$i18n.t(`Get started with {{ANSWERAI_NAME}}`, {
+												ANSWERAI_NAME: $ANSWERAI_NAME
+											})}
 										{:else if mode === 'ldap'}
-											{$i18n.t(`Sign in to {{ANSWERAI_NAME}} with LDAP`, { ANSWERAI_NAME: $ANSWERAI_NAME })}
+											{$i18n.t(`Sign in to {{ANSWERAI_NAME}} with LDAP`, {
+												ANSWERAI_NAME: $ANSWERAI_NAME
+											})}
 										{:else if mode === 'signin'}
 											{$i18n.t(`Sign in to {{ANSWERAI_NAME}}`, { ANSWERAI_NAME: $ANSWERAI_NAME })}
 										{:else}
