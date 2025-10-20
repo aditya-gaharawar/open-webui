@@ -2,7 +2,7 @@
 	import { getContext, onMount } from 'svelte';
 
 	const i18n = getContext('i18n');
-	import { WEBUI_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_BASE_URL } from '$lib/constants';
 
 	export let user = null;
 </script>
@@ -12,7 +12,7 @@
 		<div class=" items-center flex shrink-0">
 			<img
 				crossorigin="anonymous"
-				src={user?.profile_image_url ?? `${WEBUI_BASE_URL}/static/favicon.png`}
+				src={user?.profile_image_url ?? `${ANSWERAI_BASE_URL}/static/favicon.png`}
 				class=" size-12 object-cover rounded-xl"
 				alt="profile"
 			/>

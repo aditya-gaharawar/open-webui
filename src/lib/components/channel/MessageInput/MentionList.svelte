@@ -6,7 +6,7 @@
 	import Tooltip from '$lib/components/common/Tooltip.svelte';
 	import Hashtag from '$lib/components/icons/Hashtag.svelte';
 	import Lock from '$lib/components/icons/Lock.svelte';
-	import { WEBUI_API_BASE_URL, WEBUI_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_API_BASE_URL, ANSWERAI_BASE_URL } from '$lib/constants';
 	import { searchUsers } from '$lib/apis/users';
 
 	export let query = '';
@@ -172,13 +172,13 @@
 						{:else if item.type === 'model'}
 							<img
 								src={item?.data?.info?.meta?.profile_image_url ??
-									`${WEBUI_BASE_URL}/static/favicon.png`}
+									`${ANSWERAI_BASE_URL}/static/favicon.png`}
 								alt={item?.data?.name ?? item.id}
 								class="rounded-full size-5 items-center mr-2"
 							/>
 						{:else if item.type === 'user'}
 							<img
-								src={`${WEBUI_API_BASE_URL}/users/${item.id}/profile/image`}
+								src={`${ANSWERAI_API_BASE_URL}/users/${item.id}/profile/image`}
 								alt={item?.label ?? item.id}
 								class="rounded-full size-5 items-center mr-2"
 							/>

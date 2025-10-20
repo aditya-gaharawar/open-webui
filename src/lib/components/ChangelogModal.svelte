@@ -4,9 +4,9 @@
 	import { onMount, getContext } from 'svelte';
 	import { Confetti } from 'svelte-confetti';
 
-	import { WEBUI_NAME, config, settings } from '$lib/stores';
+	import { ANSWERAI_NAME, config, settings } from '$lib/stores';
 
-	import { WEBUI_VERSION } from '$lib/constants';
+	import { ANSWERAI_VERSION } from '$lib/constants';
 	import { getChangelog } from '$lib/apis';
 
 	import Modal from './common/Modal.svelte';
@@ -33,7 +33,7 @@
 		<div class="flex justify-between items-start">
 			<div class="text-xl font-medium">
 				{$i18n.t("What's New in")}
-				{$WEBUI_NAME}
+				{$ANSWERAI_NAME}
 				<Confetti x={[-1, -0.25]} y={[0, 0.5]} />
 			</div>
 			<button
@@ -53,7 +53,7 @@
 			<div class="text-sm dark:text-gray-200">{$i18n.t('Release Notes')}</div>
 			<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-50/50 dark:bg-gray-850/50" />
 			<div class="text-sm dark:text-gray-200">
-				v{WEBUI_VERSION}
+				v{ANSWERAI_VERSION}
 			</div>
 		</div>
 	</div>

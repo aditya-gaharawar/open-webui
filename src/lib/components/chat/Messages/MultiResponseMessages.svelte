@@ -18,7 +18,7 @@
 	import Skeleton from './Skeleton.svelte';
 	import localizedFormat from 'dayjs/plugin/localizedFormat';
 	import ProfileImage from './ProfileImage.svelte';
-	import { WEBUI_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_BASE_URL } from '$lib/constants';
 	const i18n = getContext('i18n');
 	dayjs.extend(localizedFormat);
 
@@ -275,8 +275,8 @@
 											<!-- <ProfileImage
 												src={model?.info?.meta?.profile_image_url ??
 													($i18n.language === 'dg-DG'
-														? `${WEBUI_BASE_URL}/doge.png`
-														: `${WEBUI_BASE_URL}/favicon.png`)}
+														? `${ANSWERAI_BASE_URL}/doge.png`
+														: `${ANSWERAI_BASE_URL}/favicon.png`)}
 												className={'size-5 assistant-message-profile-image'}
 											/> -->
 

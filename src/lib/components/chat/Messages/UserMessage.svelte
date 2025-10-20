@@ -6,7 +6,7 @@
 	import { models, settings } from '$lib/stores';
 	import { user as _user } from '$lib/stores';
 	import { copyToClipboard as _copyToClipboard, formatDate } from '$lib/utils';
-	import { WEBUI_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_BASE_URL } from '$lib/constants';
 
 	import Name from './Name.svelte';
 	import ProfileImage from './ProfileImage.svelte';
@@ -126,8 +126,8 @@
 			<ProfileImage
 				src={message.user
 					? ($models.find((m) => m.id === message.user)?.info?.meta?.profile_image_url ??
-						`${WEBUI_BASE_URL}/user.png`)
-					: (user?.profile_image_url ?? `${WEBUI_BASE_URL}/user.png`)}
+						`${ANSWERAI_BASE_URL}/user.png`)
+					: (user?.profile_image_url ?? `${ANSWERAI_BASE_URL}/user.png`)}
 				className={'size-8 user-message-profile-image'}
 			/>
 		</div>

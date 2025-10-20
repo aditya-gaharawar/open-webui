@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 
 	import { chatId, mobile, models, settings, showSidebar } from '$lib/stores';
-	import { WEBUI_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_BASE_URL } from '$lib/constants';
 	import { updateUserSettings } from '$lib/apis/users';
 	import PinnedModelItem from './PinnedModelItem.svelte';
 

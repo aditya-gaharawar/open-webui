@@ -25,7 +25,7 @@
 		isApp,
 		models,
 		selectedFolder,
-		WEBUI_NAME
+		ANSWERAI_NAME
 	} from '$lib/stores';
 	import { onMount, getContext, tick, onDestroy } from 'svelte';
 
@@ -41,7 +41,7 @@
 		importChat
 	} from '$lib/apis/chats';
 	import { createNewFolder, getFolders, updateFolderParentIdById } from '$lib/apis/folders';
-	import { WEBUI_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_BASE_URL } from '$lib/constants';
 
 	import ArchivedChatsModal from './ArchivedChatsModal.svelte';
 	import UserMenu from './Sidebar/UserMenu.svelte';
@@ -558,7 +558,7 @@
 						<div class=" self-center flex items-center justify-center size-9">
 							<img
 								crossorigin="anonymous"
-								src="{WEBUI_BASE_URL}/static/favicon.png"
+								src="{ANSWERAI_BASE_URL}/static/favicon.png"
 								class="sidebar-new-chat-icon size-6 rounded-full group-hover:hidden"
 								alt=""
 							/>
@@ -736,7 +736,7 @@
 				>
 					<img
 						crossorigin="anonymous"
-						src="{WEBUI_BASE_URL}/static/favicon.png"
+						src="{ANSWERAI_BASE_URL}/static/favicon.png"
 						class="sidebar-new-chat-icon size-6 rounded-full"
 						alt=""
 					/>
@@ -744,7 +744,7 @@
 
 				<a href="/" class="flex flex-1 px-1.5" on:click={newChatHandler}>
 					<div class=" self-center font-medium text-gray-850 dark:text-white font-primary">
-						{$WEBUI_NAME}
+						{$ANSWERAI_NAME}
 					</div>
 				</a>
 				<Tooltip

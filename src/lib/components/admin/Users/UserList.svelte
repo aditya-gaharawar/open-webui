@@ -1,6 +1,6 @@
 <script>
-	import { WEBUI_BASE_URL } from '$lib/constants';
-	import { WEBUI_NAME, config, user, showSidebar } from '$lib/stores';
+	import { ANSWERAI_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_NAME, config, user, showSidebar } from '$lib/stores';
 	import { goto } from '$app/navigation';
 	import { onMount, getContext } from 'svelte';
 
@@ -363,11 +363,11 @@
 							<div class="flex items-center">
 								<img
 									class="rounded-full w-6 h-6 object-cover mr-2.5 flex-shrink-0"
-									src={user?.profile_image_url?.startsWith(WEBUI_BASE_URL) ||
+									src={user?.profile_image_url?.startsWith(ANSWERAI_BASE_URL) ||
 									user.profile_image_url.startsWith('https://www.gravatar.com/avatar/') ||
 									user.profile_image_url.startsWith('data:')
 										? user.profile_image_url
-										: `${WEBUI_BASE_URL}/user.png`}
+										: `${ANSWERAI_BASE_URL}/user.png`}
 									alt="user"
 								/>
 
@@ -478,13 +478,13 @@
 >
 > It looks like you have over 50 users, that usually falls under organizational usage.
 > 
-> Open WebUI is completely free to use as-is, with no restrictions or hidden limits, and we'd love to keep it that way. 🌱  
+> ANSWERAI is completely free to use as-is, with no restrictions or hidden limits, and we'd love to keep it that way. 🌱  
 >
 > By supporting the project through sponsorship or an enterprise license, you’re not only helping us stay independent, you’re also helping us ship new features faster, improve stability, and grow the project for the long haul. With an *enterprise license*, you also get additional perks like dedicated support, customization options, and more, all at a fraction of what it would cost to build and maintain internally.  
 > 
 > Your support helps us stay independent and continue building great tools for everyone. 💛
 > 
-> - 👉 **[Click here to learn more about enterprise licensing](https://docs.openwebui.com/enterprise)**
+> - 👉 **[Click here to learn more about enterprise licensing](https://docs.answerai.in/enterprise)**
 > - 👉 *[Click here to sponsor the project on GitHub](https://github.com/sponsors/tjbck)*
 `}
 			/>

@@ -20,7 +20,7 @@
 		currentChatPage
 	} from '$lib/stores';
 	import { sanitizeResponseContent, extractCurlyBraceWords } from '$lib/utils';
-	import { WEBUI_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_BASE_URL } from '$lib/constants';
 
 	import Suggestions from './Suggestions.svelte';
 	import Tooltip from '$lib/components/common/Tooltip.svelte';
@@ -124,8 +124,8 @@
 											crossorigin="anonymous"
 											src={model?.info?.meta?.profile_image_url ??
 												($i18n.language === 'dg-DG'
-													? `${WEBUI_BASE_URL}/doge.png`
-													: `${WEBUI_BASE_URL}/static/favicon.png`)}
+													? `${ANSWERAI_BASE_URL}/doge.png`
+													: `${ANSWERAI_BASE_URL}/static/favicon.png`)}
 											class=" size-9 @sm:size-10 rounded-full border-[1px] border-gray-100 dark:border-none"
 											aria-hidden="true"
 											draggable="false"
@@ -184,7 +184,7 @@
 									By
 									{#if models[selectedModelIdx]?.info?.meta?.user.community}
 										<a
-											href="https://openwebui.com/m/{models[selectedModelIdx]?.info?.meta?.user
+											href="https://answerai.in/m/{models[selectedModelIdx]?.info?.meta?.user
 												.username}"
 											>{models[selectedModelIdx]?.info?.meta?.user.name
 												? models[selectedModelIdx]?.info?.meta?.user.name

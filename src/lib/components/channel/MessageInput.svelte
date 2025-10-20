@@ -24,7 +24,7 @@
 	import { getSessionUser } from '$lib/apis/auths';
 
 	import { uploadFile } from '$lib/apis/files';
-	import { WEBUI_API_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_API_BASE_URL } from '$lib/constants';
 
 	import { getSuggestionRenderer } from '../common/RichTextInput/suggestions';
 	import CommandSuggestionList from '../chat/MessageInput/CommandSuggestionList.svelte';
@@ -492,7 +492,7 @@
 				fileItem.id = uploadedFile.id;
 				fileItem.collection_name =
 					uploadedFile?.meta?.collection_name || uploadedFile?.collection_name;
-				fileItem.url = `${WEBUI_API_BASE_URL}/files/${uploadedFile.id}`;
+				fileItem.url = `${ANSWERAI_API_BASE_URL}/files/${uploadedFile.id}`;
 
 				files = files;
 			} else {
