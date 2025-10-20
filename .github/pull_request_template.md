@@ -1,13 +1,13 @@
 # Pull Request Checklist
 
-### Note to first-time contributors: Please open a discussion post in [Discussions](https://github.com/open-webui/open-webui/discussions) and describe your changes before submitting a pull request.
+### Note to first-time contributors: Please open a discussion post in [Discussions](https://github.com/answerai/answerai/discussions) and describe your changes before submitting a pull request.
 
 **Before submitting, make sure you've checked the following:**
 
 - [ ] **Target branch:** Verify that the pull request targets the `dev` branch. Not targeting the `dev` branch may lead to immediate closure of the PR.
 - [ ] **Description:** Provide a concise description of the changes made in this pull request.
 - [ ] **Changelog:** Ensure a changelog entry following the format of [Keep a Changelog](https://keepachangelog.com/) is added at the bottom of the PR description.
-- [ ] **Documentation:** If necessary, update relevant documentation [Open WebUI Docs](https://github.com/open-webui/docs) like environment variables, the tutorials, or other documentation sources.
+- [ ] **Documentation:** If necessary, update relevant documentation [ANSWERAI Docs](https://github.com/answerai/docs) like environment variables, the tutorials, or other documentation sources.
 - [ ] **Dependencies:** Are there any new dependencies? Have you updated the dependency versions in the documentation?
 - [ ] **Testing:** Perform manual tests to verify the implemented fix/feature works as intended AND does not break any other functionality. Take this as an opportunity to make screenshots of the feature/fix and include it in the PR description.
 - [ ] **Agentic AI Code:**: Confirm this Pull Request is **not written by any AI Agent** or has at least gone through additional human review **and** manual testing. If any AI Agent is the co-author of this PR, it may lead to immediate closure of the PR.
@@ -74,4 +74,4 @@
 
 ### Contributor License Agreement
 
-By submitting this pull request, I confirm that I have read and fully agree to the [Contributor License Agreement (CLA)](https://github.com/open-webui/open-webui/blob/main/CONTRIBUTOR_LICENSE_AGREEMENT), and I am providing my contributions under its terms.
+By submitting this pull request, I confirm that I have read and fully agree to the [Contributor License Agreement (CLA)](https://github.com/answerai/answerai/blob/main/CONTRIBUTOR_LICENSE_AGREEMENT), and I am providing my contributions under its terms.

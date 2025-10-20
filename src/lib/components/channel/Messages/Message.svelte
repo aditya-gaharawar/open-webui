@@ -16,7 +16,7 @@
 	import { formatDate } from '$lib/utils';
 
 	import { settings, user, shortCodesToEmojis } from '$lib/stores';
-	import { WEBUI_API_BASE_URL, WEBUI_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_API_BASE_URL, ANSWERAI_BASE_URL } from '$lib/constants';
 
 	import Markdown from '$lib/components/chat/Messages/Markdown.svelte';
 	import ProfileImage from '$lib/components/chat/Messages/ProfileImage.svelte';
@@ -178,7 +178,7 @@
 				>
 					{#if message?.reply_to_message?.meta?.model_id}
 						<img
-							src={`${WEBUI_API_BASE_URL}/models/model/profile/image?id=${message.reply_to_message.meta.model_id}`}
+							src={`${ANSWERAI_API_BASE_URL}/models/model/profile/image?id=${message.reply_to_message.meta.model_id}`}
 							alt={message.reply_to_message.meta.model_name ??
 								message.reply_to_message.meta.model_id}
 							class="size-4 ml-0.5 rounded-full object-cover"
@@ -186,7 +186,7 @@
 					{:else}
 						<img
 							src={message.reply_to_message.user?.profile_image_url ??
-								`${WEBUI_BASE_URL}/static/favicon.png`}
+								`${ANSWERAI_BASE_URL}/static/favicon.png`}
 							alt={message.reply_to_message.user?.name ?? $i18n.t('Unknown User')}
 							class="size-4 ml-0.5 rounded-full object-cover"
 						/>
@@ -213,14 +213,14 @@
 				{#if showUserProfile}
 					{#if message?.meta?.model_id}
 						<img
-							src={`${WEBUI_API_BASE_URL}/models/model/profile/image?id=${message.meta.model_id}`}
+							src={`${ANSWERAI_API_BASE_URL}/models/model/profile/image?id=${message.meta.model_id}`}
 							alt={message.meta.model_name ?? message.meta.model_id}
 							class="size-8 translate-y-1 ml-0.5 object-cover rounded-full"
 						/>
 					{:else}
 						<ProfilePreview user={message.user}>
 							<ProfileImage
-								src={message.user?.profile_image_url ?? `${WEBUI_BASE_URL}/static/favicon.png`}
+								src={message.user?.profile_image_url ?? `${ANSWERAI_BASE_URL}/static/favicon.png`}
 								className={'size-8 ml-0.5'}
 							/>
 						</ProfilePreview>

@@ -47,7 +47,11 @@
 	import { getSessionUser } from '$lib/apis/auths';
 	import { getTools } from '$lib/apis/tools';
 
-	import { WEBUI_BASE_URL, WEBUI_API_BASE_URL, PASTED_TEXT_CHARACTER_LIMIT } from '$lib/constants';
+	import {
+		ANSWERAI_BASE_URL,
+		ANSWERAI_API_BASE_URL,
+		PASTED_TEXT_CHARACTER_LIMIT
+	} from '$lib/constants';
 
 	import InputMenu from './MessageInput/InputMenu.svelte';
 	import VoiceRecording from './MessageInput/VoiceRecording.svelte';
@@ -586,7 +590,7 @@
 					fileItem.id = uploadedFile.id;
 					fileItem.collection_name =
 						uploadedFile?.meta?.collection_name || uploadedFile?.collection_name;
-					fileItem.url = `${WEBUI_API_BASE_URL}/files/${uploadedFile.id}`;
+					fileItem.url = `${ANSWERAI_API_BASE_URL}/files/${uploadedFile.id}`;
 
 					files = files;
 				} else {
@@ -1069,8 +1073,8 @@
 													src={$models.find((model) => model.id === atSelectedModel.id)?.info?.meta
 														?.profile_image_url ??
 														($i18n.language === 'dg-DG'
-															? `${WEBUI_BASE_URL}/doge.png`
-															: `${WEBUI_BASE_URL}/static/favicon.png`)}
+															? `${ANSWERAI_BASE_URL}/doge.png`
+															: `${ANSWERAI_BASE_URL}/static/favicon.png`)}
 												/>
 												<div class="translate-y-[0.5px]">
 													<span class="">{atSelectedModel.name}</span>

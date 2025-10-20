@@ -3,7 +3,7 @@
 	import { toast } from 'svelte-sonner';
 
 	import {
-		WEBUI_NAME,
+		ANSWERAI_NAME,
 		banners,
 		chatId,
 		config,

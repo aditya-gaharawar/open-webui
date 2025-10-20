@@ -3,7 +3,14 @@
 	import fileSaver from 'file-saver';
 	const { saveAs } = fileSaver;
 
-	import { WEBUI_NAME, config, functions as _functions, models, settings, user } from '$lib/stores';
+	import {
+		ANSWERAI_NAME,
+		config,
+		functions as _functions,
+		models,
+		settings,
+		user
+	} from '$lib/stores';
 	import { onMount, getContext, tick } from 'svelte';
 
 	import { goto } from '$app/navigation';
@@ -99,9 +106,9 @@
 			return null;
 		});
 
-		toast.success($i18n.t('Redirecting you to Open WebUI Community'));
+		toast.success($i18n.t('Redirecting you to ANSWERAI Community'));
 
-		const url = 'https://openwebui.com';
+		const url = 'https://answerai.in';
 
 		const tab = await window.open(`${url}/functions/create`, '_blank');
 
@@ -239,7 +246,7 @@
 
 <svelte:head>
 	<title>
-		{$i18n.t('Functions')} • {$WEBUI_NAME}
+		{$i18n.t('Functions')} • {$ANSWERAI_NAME}
 	</title>
 </svelte:head>
 
@@ -594,12 +601,12 @@
 		{#if $config?.features.enable_community_sharing}
 			<div class=" my-16">
 				<div class=" text-xl font-medium mb-1 line-clamp-1">
-					{$i18n.t('Made by Open WebUI Community')}
+					{$i18n.t('Made by ANSWERAI Community')}
 				</div>
 
 				<a
 					class=" flex cursor-pointer items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-850 w-full mb-2 px-3.5 py-1.5 rounded-xl transition"
-					href="https://openwebui.com/functions"
+					href="https://answerai.in/functions"
 					target="_blank"
 				>
 					<div class=" self-center">

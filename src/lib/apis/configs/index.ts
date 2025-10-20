@@ -1,10 +1,10 @@
-import { WEBUI_API_BASE_URL, WEBUI_BASE_URL } from '$lib/constants';
+import { ANSWERAI_API_BASE_URL, ANSWERAI_BASE_URL } from '$lib/constants';
 import type { Banner } from '$lib/types';
 
 export const importConfig = async (token: string, config) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/import`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/import`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export const importConfig = async (token: string, config) => {
 export const exportConfig = async (token: string) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/export`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/export`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export const exportConfig = async (token: string) => {
 export const getConnectionsConfig = async (token: string) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/connections`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/connections`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ export const getConnectionsConfig = async (token: string) => {
 export const setConnectionsConfig = async (token: string, config: object) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/connections`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/connections`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ export const setConnectionsConfig = async (token: string, config: object) => {
 export const getToolServerConnections = async (token: string) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/tool_servers`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/tool_servers`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ export const getToolServerConnections = async (token: string) => {
 export const setToolServerConnections = async (token: string, connections: object) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/tool_servers`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/tool_servers`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -175,7 +175,7 @@ export const setToolServerConnections = async (token: string, connections: objec
 export const verifyToolServerConnection = async (token: string, connection: object) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/tool_servers/verify`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/tool_servers/verify`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -216,16 +216,19 @@ export const registerOAuthClient = async (
 	let error = null;
 
 	const searchParams = type ? `?type=${type}` : '';
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/oauth/clients/register${searchParams}`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`
-		},
-		body: JSON.stringify({
-			...formData
-		})
-	})
+	const res = await fetch(
+		`${ANSWERAI_API_BASE_URL}/configs/oauth/clients/register${searchParams}`,
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`
+			},
+			body: JSON.stringify({
+				...formData
+			})
+		}
+	)
 		.then(async (res) => {
 			if (!res.ok) throw await res.json();
 			return res.json();
@@ -245,13 +248,13 @@ export const registerOAuthClient = async (
 
 export const getOAuthClientAuthorizationUrl = (clientId: string, type: null | string = null) => {
 	const oauthClientId = type ? `${type}:${clientId}` : clientId;
-	return `${WEBUI_BASE_URL}/oauth/clients/${oauthClientId}/authorize`;
+	return `${ANSWERAI_BASE_URL}/oauth/clients/${oauthClientId}/authorize`;
 };
 
 export const getCodeExecutionConfig = async (token: string) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/code_execution`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/code_execution`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -278,7 +281,7 @@ export const getCodeExecutionConfig = async (token: string) => {
 export const setCodeExecutionConfig = async (token: string, config: object) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/code_execution`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/code_execution`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -308,7 +311,7 @@ export const setCodeExecutionConfig = async (token: string, config: object) => {
 export const getModelsConfig = async (token: string) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/models`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/models`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -335,7 +338,7 @@ export const getModelsConfig = async (token: string) => {
 export const setModelsConfig = async (token: string, config: object) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/models`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/models`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -365,7 +368,7 @@ export const setModelsConfig = async (token: string, config: object) => {
 export const setDefaultPromptSuggestions = async (token: string, promptSuggestions: string) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/suggestions`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/suggestions`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -395,7 +398,7 @@ export const setDefaultPromptSuggestions = async (token: string, promptSuggestio
 export const getBanners = async (token: string): Promise<Banner[]> => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/banners`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/banners`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -422,7 +425,7 @@ export const getBanners = async (token: string): Promise<Banner[]> => {
 export const setBanners = async (token: string, banners: Banner[]) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/configs/banners`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/banners`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

@@ -1,9 +1,9 @@
-import { WEBUI_API_BASE_URL } from '$lib/constants';
+import { ANSWERAI_API_BASE_URL } from '$lib/constants';
 
 export const getModels = async (token: string = '') => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/models/`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/models/`, {
 		method: 'GET',
 		headers: {
 			Accept: 'application/json',
@@ -34,7 +34,7 @@ export const getModels = async (token: string = '') => {
 export const importModels = async (token: string, models: object[]) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/models/import`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/models/import`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export const importModels = async (token: string, models: object[]) => {
 export const getBaseModels = async (token: string = '') => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/models/base`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/models/base`, {
 		method: 'GET',
 		headers: {
 			Accept: 'application/json',
@@ -93,7 +93,7 @@ export const getBaseModels = async (token: string = '') => {
 export const createNewModel = async (token: string, model: object) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/models/create`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/models/create`, {
 		method: 'POST',
 		headers: {
 			Accept: 'application/json',
@@ -125,7 +125,7 @@ export const getModelById = async (token: string, id: string) => {
 	const searchParams = new URLSearchParams();
 	searchParams.append('id', id);
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/models/model?${searchParams.toString()}`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/models/model?${searchParams.toString()}`, {
 		method: 'GET',
 		headers: {
 			Accept: 'application/json',
@@ -160,14 +160,17 @@ export const toggleModelById = async (token: string, id: string) => {
 	const searchParams = new URLSearchParams();
 	searchParams.append('id', id);
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/models/model/toggle?${searchParams.toString()}`, {
-		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
+	const res = await fetch(
+		`${ANSWERAI_API_BASE_URL}/models/model/toggle?${searchParams.toString()}`,
+		{
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+				authorization: `Bearer ${token}`
+			}
 		}
-	})
+	)
 		.then(async (res) => {
 			if (!res.ok) throw await res.json();
 			return res.json();
@@ -195,15 +198,18 @@ export const updateModelById = async (token: string, id: string, model: object) 
 	const searchParams = new URLSearchParams();
 	searchParams.append('id', id);
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/models/model/update?${searchParams.toString()}`, {
-		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		},
-		body: JSON.stringify(model)
-	})
+	const res = await fetch(
+		`${ANSWERAI_API_BASE_URL}/models/model/update?${searchParams.toString()}`,
+		{
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+				authorization: `Bearer ${token}`
+			},
+			body: JSON.stringify(model)
+		}
+	)
 		.then(async (res) => {
 			if (!res.ok) throw await res.json();
 			return res.json();
@@ -231,14 +237,17 @@ export const deleteModelById = async (token: string, id: string) => {
 	const searchParams = new URLSearchParams();
 	searchParams.append('id', id);
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/models/model/delete?${searchParams.toString()}`, {
-		method: 'DELETE',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
+	const res = await fetch(
+		`${ANSWERAI_API_BASE_URL}/models/model/delete?${searchParams.toString()}`,
+		{
+			method: 'DELETE',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+				authorization: `Bearer ${token}`
+			}
 		}
-	})
+	)
 		.then(async (res) => {
 			if (!res.ok) throw await res.json();
 			return res.json();
@@ -263,7 +272,7 @@ export const deleteModelById = async (token: string, id: string) => {
 export const deleteAllModels = async (token: string) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/models/delete/all`, {
+	const res = await fetch(`${ANSWERAI_API_BASE_URL}/models/delete/all`, {
 		method: 'DELETE',
 		headers: {
 			Accept: 'application/json',

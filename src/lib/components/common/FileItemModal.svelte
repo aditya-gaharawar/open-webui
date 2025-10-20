@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext, onMount, tick } from 'svelte';
 	import { formatFileSize, getLineCount } from '$lib/utils';
-	import { WEBUI_API_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_API_BASE_URL } from '$lib/constants';
 	import { getKnowledgeById } from '$lib/apis/knowledge';
 
 	const i18n = getContext('i18n');
@@ -231,7 +231,7 @@
 					{#if selectedTab === 'preview'}
 						<iframe
 							title={item?.name}
-							src={`${WEBUI_API_BASE_URL}/files/${item.id}/content`}
+							src={`${ANSWERAI_API_BASE_URL}/files/${item.id}/content`}
 							class="w-full h-[70vh] border-0 rounded-lg"
 						/>
 					{:else}
@@ -242,7 +242,7 @@
 				{:else}
 					{#if isAudio}
 						<audio
-							src={`${WEBUI_API_BASE_URL}/files/${item.id}/content`}
+							src={`${ANSWERAI_API_BASE_URL}/files/${item.id}/content`}
 							class="w-full border-0 rounded-lg mb-2"
 							controls
 							playsinline
