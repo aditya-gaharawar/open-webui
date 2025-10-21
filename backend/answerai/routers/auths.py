@@ -51,6 +51,14 @@ from answerai.utils.auth import (
 )
 from answerai.utils.webhook import post_webhook
 from answerai.utils.access_control import get_permissions
+from answerai.utils.email import (
+    send_verification_email,
+    is_email_configured,
+    EMAIL_VERIFICATION_ENABLED,
+    EMAIL_VERIFICATION_URL,
+    EMAIL_VERIFICATION_TOKEN_EXPIRY,
+)
+from answerai.models.email_verification import EmailVerificationTokens
 
 from typing import Optional, List
 
@@ -511,6 +519,15 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
         user = Auths.authenticate_user(form_data.email.lower(), form_data.password)
 
     if user:
+        # Check if email verification is required
+        if EMAIL_VERIFICATION_ENABLED and is_email_configured():
+            email_verified = getattr(user, "email_verified", True)
+            # Admin users bypass email verification
+            if user.role != "admin" and not email_verified:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Email not verified. Please check your email for a verification link.",
+                )
 
         expires_delta = parse_duration(request.app.state.config.JWT_EXPIRES_IN)
         expires_at = None
@@ -600,12 +617,24 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
             )
 
         hashed = get_password_hash(form_data.password)
+
+        # Determine if email needs verification
+        # First admin user or OAuth users skip email verification
+        email_verified = True
+        if not has_users:
+            # First user (admin) is automatically verified
+            email_verified = True
+        elif EMAIL_VERIFICATION_ENABLED and is_email_configured():
+            # Email verification is enabled and configured
+            email_verified = False
+
         user = Auths.insert_new_auth(
             form_data.email.lower(),
             hashed,
             form_data.name,
             form_data.profile_image_url,
             role,
+            email_verified=email_verified,
         )
 
         if user:
@@ -634,6 +663,38 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
                 samesite=WEBUI_AUTH_COOKIE_SAME_SITE,
                 secure=WEBUI_AUTH_COOKIE_SECURE,
             )
+
+            # Send verification email if needed
+            if (
+                not email_verified
+                and EMAIL_VERIFICATION_ENABLED
+                and is_email_configured()
+            ):
+                try:
+                    # Create verification token
+                    verification_token = EmailVerificationTokens.create_token(
+                        user_id=user.id,
+                        email=user.email,
+                        expiration_seconds=EMAIL_VERIFICATION_TOKEN_EXPIRY,
+                    )
+
+                    if verification_token:
+                        # Send verification email
+                        success, error = send_verification_email(
+                            to_email=user.email,
+                            user_name=user.name,
+                            verification_token=verification_token.token,
+                            base_url=EMAIL_VERIFICATION_URL,
+                        )
+
+                        if not success:
+                            log.error(f"Failed to send verification email: {error}")
+                        else:
+                            log.info(f"Verification email sent to {user.email}")
+                    else:
+                        log.error("Failed to create verification token")
+                except Exception as e:
+                    log.error(f"Error sending verification email: {e}")
 
             if request.app.state.config.WEBHOOK_URL:
                 await post_webhook(

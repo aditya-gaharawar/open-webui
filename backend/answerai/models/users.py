@@ -11,7 +11,7 @@ from answerai.utils.misc import throttle
 
 
 from pydantic import BaseModel, ConfigDict
-from sqlalchemy import BigInteger, Column, String, Text, Date
+from sqlalchemy import BigInteger, Boolean, Column, String, Text, Date
 from sqlalchemy import or_
 
 import datetime
@@ -42,6 +42,8 @@ class User(Base):
 
     api_key = Column(String, nullable=True, unique=True)
     oauth_sub = Column(Text, unique=True)
+
+    email_verified = Column(Boolean, default=False, nullable=True)
 
     last_active_at = Column(BigInteger)
 
@@ -74,6 +76,8 @@ class UserModel(BaseModel):
 
     api_key: Optional[str] = None
     oauth_sub: Optional[str] = None
+
+    email_verified: Optional[bool] = False
 
     last_active_at: int  # timestamp in epoch
     updated_at: int  # timestamp in epoch
@@ -159,6 +163,7 @@ class UsersTable:
         profile_image_url: str = "/user.png",
         role: str = "pending",
         oauth_sub: Optional[str] = None,
+        email_verified: bool = False,
     ) -> Optional[UserModel]:
         with get_db() as db:
             user = UserModel(
@@ -172,6 +177,7 @@ class UsersTable:
                     "created_at": int(time.time()),
                     "updated_at": int(time.time()),
                     "oauth_sub": oauth_sub,
+                    "email_verified": email_verified,
                 }
             )
             result = User(**user.model_dump())

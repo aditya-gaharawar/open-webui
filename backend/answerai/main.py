@@ -93,6 +93,7 @@ from answerai.routers import (
     users,
     utils,
     scim,
+    email_verification,
 )
 
 from answerai.routers.retrieval import (
@@ -1294,6 +1295,11 @@ app.include_router(retrieval.router, prefix="/api/v1/retrieval", tags=["retrieva
 app.include_router(configs.router, prefix="/api/v1/configs", tags=["configs"])
 
 app.include_router(auths.router, prefix="/api/v1/auths", tags=["auths"])
+app.include_router(
+    email_verification.router,
+    prefix="/api/v1/email-verification",
+    tags=["email-verification"],
+)
 app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
 
 
