@@ -617,7 +617,7 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
             )
 
         hashed = get_password_hash(form_data.password)
-        
+
         # Determine if email needs verification
         # First admin user or OAuth users skip email verification
         email_verified = True
@@ -627,7 +627,7 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
         elif EMAIL_VERIFICATION_ENABLED and is_email_configured():
             # Email verification is enabled and configured
             email_verified = False
-        
+
         user = Auths.insert_new_auth(
             form_data.email.lower(),
             hashed,
@@ -665,7 +665,11 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
             )
 
             # Send verification email if needed
-            if not email_verified and EMAIL_VERIFICATION_ENABLED and is_email_configured():
+            if (
+                not email_verified
+                and EMAIL_VERIFICATION_ENABLED
+                and is_email_configured()
+            ):
                 try:
                     # Create verification token
                     verification_token = EmailVerificationTokens.create_token(
@@ -673,7 +677,7 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
                         email=user.email,
                         expiration_seconds=EMAIL_VERIFICATION_TOKEN_EXPIRY,
                     )
-                    
+
                     if verification_token:
                         # Send verification email
                         success, error = send_verification_email(
@@ -682,7 +686,7 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
                             verification_token=verification_token.token,
                             base_url=EMAIL_VERIFICATION_URL,
                         )
-                        
+
                         if not success:
                             log.error(f"Failed to send verification email: {error}")
                         else:

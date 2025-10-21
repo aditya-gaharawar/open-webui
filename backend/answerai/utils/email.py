@@ -28,7 +28,9 @@ SMTP_USE_SSL = os.environ.get("SMTP_USE_SSL", "false").lower() == "true"
 EMAIL_VERIFICATION_ENABLED = (
     os.environ.get("EMAIL_VERIFICATION_ENABLED", "false").lower() == "true"
 )
-EMAIL_VERIFICATION_URL = os.environ.get("EMAIL_VERIFICATION_URL", "http://localhost:8080/auth/verify")
+EMAIL_VERIFICATION_URL = os.environ.get(
+    "EMAIL_VERIFICATION_URL", "http://localhost:8080/auth/verify"
+)
 EMAIL_VERIFICATION_TOKEN_EXPIRY = int(
     os.environ.get("EMAIL_VERIFICATION_TOKEN_EXPIRY", "86400")  # 24 hours default
 )

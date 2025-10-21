@@ -42,7 +42,7 @@ class User(Base):
 
     api_key = Column(String, nullable=True, unique=True)
     oauth_sub = Column(Text, unique=True)
-    
+
     email_verified = Column(Boolean, default=False, nullable=True)
 
     last_active_at = Column(BigInteger)
@@ -76,7 +76,7 @@ class UserModel(BaseModel):
 
     api_key: Optional[str] = None
     oauth_sub: Optional[str] = None
-    
+
     email_verified: Optional[bool] = False
 
     last_active_at: int  # timestamp in epoch

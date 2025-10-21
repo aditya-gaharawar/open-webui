@@ -57,12 +57,12 @@ class ResendVerificationResponse(BaseModel):
 async def get_email_verification_status(user=Depends(get_current_user)):
     """Get email verification status for the current user"""
     user_data = Users.get_user_by_id(user.id)
-    
+
     email_verified = True  # Default to True if verification is disabled
     if EMAIL_VERIFICATION_ENABLED and user_data:
         # Check if user has email_verified attribute
         email_verified = getattr(user_data, "email_verified", True)
-    
+
     return {
         "enabled": EMAIL_VERIFICATION_ENABLED and is_email_configured(),
         "email_verified": email_verified,
@@ -77,7 +77,7 @@ async def get_email_verification_status(user=Depends(get_current_user)):
 @router.post("/verify", response_model=VerifyEmailResponse)
 async def verify_email(form_data: VerifyEmailForm):
     """Verify email address using the token from the verification link"""
-    
+
     if not EMAIL_VERIFICATION_ENABLED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -141,7 +141,7 @@ async def verify_email(form_data: VerifyEmailForm):
 @router.post("/resend", response_model=ResendVerificationResponse)
 async def resend_verification_email(form_data: ResendVerificationEmailForm):
     """Resend verification email to the user"""
-    
+
     if not EMAIL_VERIFICATION_ENABLED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -189,7 +189,7 @@ async def resend_verification_email(form_data: ResendVerificationEmailForm):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to create verification token",
             )
-        
+
         token_string = token.token
 
     # Send verification email

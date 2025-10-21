@@ -10,12 +10,13 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+
 def test_smtp_connection():
     """Test SMTP connection with environment variables"""
     print("=" * 60)
     print("Testing SMTP Configuration")
     print("=" * 60)
-    
+
     # Get SMTP settings
     SMTP_HOST = os.environ.get("SMTP_HOST", "")
     SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
@@ -24,21 +25,25 @@ def test_smtp_connection():
     SMTP_FROM_EMAIL = os.environ.get("SMTP_FROM_EMAIL", "")
     SMTP_USE_TLS = os.environ.get("SMTP_USE_TLS", "true").lower() == "true"
     SMTP_USE_SSL = os.environ.get("SMTP_USE_SSL", "false").lower() == "true"
-    
+
     print(f"\nSMTP Host: {SMTP_HOST}")
     print(f"SMTP Port: {SMTP_PORT}")
     print(f"SMTP Username: {SMTP_USERNAME}")
     print(f"SMTP From Email: {SMTP_FROM_EMAIL}")
     print(f"SMTP Use TLS: {SMTP_USE_TLS}")
     print(f"SMTP Use SSL: {SMTP_USE_SSL}")
-    print(f"SMTP Password: {'*' * len(SMTP_PASSWORD) if SMTP_PASSWORD else '(not set)'}")
-    
+    print(
+        f"SMTP Password: {'*' * len(SMTP_PASSWORD) if SMTP_PASSWORD else '(not set)'}"
+    )
+
     # Check if all required settings are set
     if not all([SMTP_HOST, SMTP_PORT, SMTP_FROM_EMAIL]):
         print("\n❌ ERROR: Missing required SMTP configuration")
-        print("Please set SMTP_HOST, SMTP_PORT, and SMTP_FROM_EMAIL environment variables")
+        print(
+            "Please set SMTP_HOST, SMTP_PORT, and SMTP_FROM_EMAIL environment variables"
+        )
         return False
-    
+
     # Test connection
     print("\n📧 Testing SMTP connection...")
     try:
@@ -46,21 +51,23 @@ def test_smtp_connection():
             server = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=10)
         else:
             server = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10)
-        
+
         if SMTP_USE_TLS and not SMTP_USE_SSL:
             server.starttls()
-        
+
         if SMTP_USERNAME and SMTP_PASSWORD:
             print("🔐 Authenticating...")
             server.login(SMTP_USERNAME, SMTP_PASSWORD)
-        
+
         server.quit()
         print("✅ SMTP connection successful!")
         return True
-        
+
     except smtplib.SMTPAuthenticationError:
         print("❌ Authentication failed. Check your username and password.")
-        print("For Gmail, make sure you're using an App Password, not your regular password.")
+        print(
+            "For Gmail, make sure you're using an App Password, not your regular password."
+        )
         return False
     except smtplib.SMTPConnectError:
         print(f"❌ Could not connect to SMTP server {SMTP_HOST}:{SMTP_PORT}")
@@ -76,7 +83,7 @@ def send_test_email(to_email: str):
     print("\n" + "=" * 60)
     print("Sending Test Email")
     print("=" * 60)
-    
+
     SMTP_HOST = os.environ.get("SMTP_HOST", "")
     SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
     SMTP_USERNAME = os.environ.get("SMTP_USERNAME", "")
@@ -85,14 +92,14 @@ def send_test_email(to_email: str):
     SMTP_FROM_NAME = os.environ.get("SMTP_FROM_NAME", "AnswerAI")
     SMTP_USE_TLS = os.environ.get("SMTP_USE_TLS", "true").lower() == "true"
     SMTP_USE_SSL = os.environ.get("SMTP_USE_SSL", "false").lower() == "true"
-    
+
     try:
         # Create message
         message = MIMEMultipart("alternative")
         message["Subject"] = "Test Email from AnswerAI Email Verification System"
         message["From"] = f"{SMTP_FROM_NAME} <{SMTP_FROM_EMAIL}>"
         message["To"] = to_email
-        
+
         # HTML content
         html_content = """
         <!DOCTYPE html>
@@ -114,7 +121,7 @@ def send_test_email(to_email: str):
         </body>
         </html>
         """
-        
+
         text_content = """
         Test Email Successful!
         
@@ -125,33 +132,33 @@ def send_test_email(to_email: str):
         ---
         This is an automated test message.
         """
-        
+
         part1 = MIMEText(text_content, "plain")
         part2 = MIMEText(html_content, "html")
         message.attach(part1)
         message.attach(part2)
-        
+
         # Connect and send
         print(f"\n📧 Sending test email to {to_email}...")
-        
+
         if SMTP_USE_SSL:
             server = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=10)
         else:
             server = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10)
-        
+
         if SMTP_USE_TLS and not SMTP_USE_SSL:
             server.starttls()
-        
+
         if SMTP_USERNAME and SMTP_PASSWORD:
             server.login(SMTP_USERNAME, SMTP_PASSWORD)
-        
+
         server.send_message(message)
         server.quit()
-        
+
         print("✅ Test email sent successfully!")
         print(f"📬 Check {to_email} for the test email")
         return True
-        
+
     except Exception as e:
         print(f"❌ Error sending test email: {str(e)}")
         return False
@@ -164,19 +171,20 @@ def main():
     print("=" * 60)
     print("\nThis script tests your SMTP configuration for the email")
     print("verification system.")
-    
+
     # Check if .env file exists
     if os.path.exists(".env"):
         print("\n📄 Loading environment variables from .env file...")
         try:
             from dotenv import load_dotenv
+
             load_dotenv()
             print("✅ Environment variables loaded")
         except ImportError:
             print("⚠️  python-dotenv not installed. Using system environment variables.")
     else:
         print("\n⚠️  No .env file found. Using system environment variables.")
-    
+
     # Test SMTP connection
     if not test_smtp_connection():
         print("\n❌ SMTP connection test failed")
@@ -187,18 +195,18 @@ def main():
         print("  - SMTP_PASSWORD")
         print("  - SMTP_FROM_EMAIL")
         sys.exit(1)
-    
+
     # Ask if user wants to send test email
     print("\n" + "=" * 60)
     send_test = input("\nDo you want to send a test email? (y/n): ").lower().strip()
-    
-    if send_test == 'y':
+
+    if send_test == "y":
         to_email = input("Enter recipient email address: ").strip()
         if to_email:
             send_test_email(to_email)
         else:
             print("❌ No email address provided")
-    
+
     print("\n" + "=" * 60)
     print("Test completed!")
     print("=" * 60)
