@@ -7,24 +7,28 @@ This is a production-grade email verification system for OpenWebUI (AnswerAI). I
 ## Features
 
 ✅ **Email Verification System**
+
 - Email verification tokens with secure random generation
 - Token expiration (configurable, default 24 hours)
 - Token usage tracking (one-time use)
 - Automatic email sending on signup
 
 ✅ **SMTP Email Support**
+
 - Configurable SMTP server settings
 - TLS/SSL support
 - HTML email templates with responsive design
 - Text fallback for email clients that don't support HTML
 
 ✅ **API Endpoints**
+
 - `POST /api/v1/email-verification/verify` - Verify email with token
 - `POST /api/v1/email-verification/resend` - Resend verification email
 - `GET /api/v1/email-verification/status` - Get verification status
 - `GET /api/v1/email-verification/required` - Check if verification is required
 
 ✅ **Security Features**
+
 - Secure token generation using `secrets.token_urlsafe()`
 - Token expiration with configurable time
 - One-time use tokens
@@ -32,6 +36,7 @@ This is a production-grade email verification system for OpenWebUI (AnswerAI). I
 - Email verification can be enabled/disabled
 
 ✅ **Database Models**
+
 - Added `email_verified` field to User table
 - New `email_verification_token` table with indexes
 - Database migration included
@@ -66,6 +71,7 @@ EMAIL_VERIFICATION_TOKEN_EXPIRY=86400
 ### 2. SMTP Setup Examples
 
 #### Gmail Setup
+
 1. Enable 2-Factor Authentication on your Google account
 2. Generate an App Password: https://myaccount.google.com/apppasswords
 3. Use the generated password in `SMTP_PASSWORD`
@@ -80,6 +86,7 @@ SMTP_USE_TLS=true
 ```
 
 #### SendGrid Setup
+
 ```bash
 SMTP_HOST=smtp.sendgrid.net
 SMTP_PORT=587
@@ -90,6 +97,7 @@ SMTP_USE_TLS=true
 ```
 
 #### AWS SES Setup
+
 ```bash
 SMTP_HOST=email-smtp.us-east-1.amazonaws.com
 SMTP_PORT=587
@@ -100,6 +108,7 @@ SMTP_USE_TLS=true
 ```
 
 #### Mailgun Setup
+
 ```bash
 SMTP_HOST=smtp.mailgun.org
 SMTP_PORT=587
@@ -112,11 +121,13 @@ SMTP_USE_TLS=true
 ### 3. Database Migration
 
 The database migration will be automatically run when you start the application. It will:
+
 - Add `email_verified` column to the `user` table
 - Create the `email_verification_token` table
 - Add necessary indexes for performance
 
 To manually run migrations:
+
 ```bash
 cd backend
 alembic upgrade head
@@ -130,6 +141,7 @@ python -m answerai.main
 ```
 
 Or if using Docker:
+
 ```bash
 docker-compose up -d
 ```
@@ -139,17 +151,20 @@ docker-compose up -d
 ### User Signup Flow
 
 1. **User Signs Up**
+
    - User fills out signup form with name, email, and password
    - If email verification is enabled, user is created with `email_verified=False`
    - A verification token is generated and stored in the database
    - Verification email is sent to the user's email address
 
 2. **User Receives Email**
+
    - Email contains a verification link: `{EMAIL_VERIFICATION_URL}?token={token}`
    - Link is valid for 24 hours (configurable)
    - Email template is responsive and looks professional
 
 3. **User Clicks Verification Link**
+
    - Frontend captures the token from URL
    - Frontend calls `POST /api/v1/email-verification/verify` with the token
    - Backend verifies token validity and marks email as verified
@@ -171,6 +186,7 @@ docker-compose up -d
 ## API Documentation
 
 ### Verify Email
+
 ```http
 POST /api/v1/email-verification/verify
 Content-Type: application/json
@@ -181,15 +197,17 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
-  "success": true,
-  "message": "Email verified successfully",
-  "email_verified": true
+	"success": true,
+	"message": "Email verified successfully",
+	"email_verified": true
 }
 ```
 
 ### Resend Verification Email
+
 ```http
 POST /api/v1/email-verification/resend
 Content-Type: application/json
@@ -200,37 +218,42 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
-  "success": true,
-  "message": "Verification email has been sent"
+	"success": true,
+	"message": "Verification email has been sent"
 }
 ```
 
 ### Check Verification Status
+
 ```http
 GET /api/v1/email-verification/status
 Authorization: Bearer {token}
 ```
 
 **Response:**
+
 ```json
 {
-  "enabled": true,
-  "email_verified": false
+	"enabled": true,
+	"email_verified": false
 }
 ```
 
 ### Check if Verification Required
+
 ```http
 GET /api/v1/email-verification/required
 ```
 
 **Response:**
+
 ```json
 {
-  "required": true,
-  "configured": true
+	"required": true,
+	"configured": true
 }
 ```
 
@@ -249,36 +272,36 @@ let status = 'pending'; // pending, success, error
 let message = '';
 
 onMount(async () => {
-  // Get token from URL
-  const params = new URLSearchParams(window.location.search);
-  token = params.get('token') || '';
-  
-  if (token) {
-    try {
-      const response = await fetch('/api/v1/email-verification/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token })
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        status = 'success';
-        message = data.message;
-        // Redirect to login after 3 seconds
-        setTimeout(() => {
-          window.location.href = '/auth';
-        }, 3000);
-      } else {
-        status = 'error';
-        message = data.detail || 'Verification failed';
-      }
-    } catch (error) {
-      status = 'error';
-      message = 'An error occurred during verification';
-    }
-  }
+	// Get token from URL
+	const params = new URLSearchParams(window.location.search);
+	token = params.get('token') || '';
+
+	if (token) {
+		try {
+			const response = await fetch('/api/v1/email-verification/verify', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ token })
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				status = 'success';
+				message = data.message;
+				// Redirect to login after 3 seconds
+				setTimeout(() => {
+					window.location.href = '/auth';
+				}, 3000);
+			} else {
+				status = 'error';
+				message = data.detail || 'Verification failed';
+			}
+		} catch (error) {
+			status = 'error';
+			message = 'An error occurred during verification';
+		}
+	}
 });
 ```
 
@@ -286,23 +309,23 @@ onMount(async () => {
 
 ```typescript
 async function resendVerification(email: string) {
-  try {
-    const response = await fetch('/api/v1/email-verification/resend', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
-    
-    const data = await response.json();
-    
-    if (response.ok) {
-      alert(data.message);
-    } else {
-      alert(data.detail || 'Failed to resend email');
-    }
-  } catch (error) {
-    alert('An error occurred');
-  }
+	try {
+		const response = await fetch('/api/v1/email-verification/resend', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ email })
+		});
+
+		const data = await response.json();
+
+		if (response.ok) {
+			alert(data.message);
+		} else {
+			alert(data.detail || 'Failed to resend email');
+		}
+	} catch (error) {
+		alert('An error occurred');
+	}
 }
 ```
 
@@ -311,6 +334,7 @@ async function resendVerification(email: string) {
 The system includes professional HTML email templates:
 
 ### Verification Email
+
 - Clean, modern design
 - Responsive layout
 - Clear call-to-action button
@@ -319,6 +343,7 @@ The system includes professional HTML email templates:
 - Mobile-friendly
 
 ### Welcome Email
+
 - Sent after successful verification
 - Confirmation message
 - Professional design
@@ -330,8 +355,10 @@ The system includes professional HTML email templates:
 For local testing, you can use a test SMTP service like:
 
 1. **Mailtrap** (https://mailtrap.io)
+
    - Free tier available
    - Perfect for testing
+
    ```bash
    SMTP_HOST=sandbox.smtp.mailtrap.io
    SMTP_PORT=2525
@@ -340,9 +367,10 @@ For local testing, you can use a test SMTP service like:
    ```
 
 2. **MailHog** (Docker)
+
    ```bash
    docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
-   
+
    SMTP_HOST=localhost
    SMTP_PORT=1025
    SMTP_USE_TLS=false
@@ -366,14 +394,17 @@ For local testing, you can use a test SMTP service like:
 ### Email Not Sending
 
 1. **Check SMTP credentials**
+
    - Verify username and password are correct
    - For Gmail, ensure you're using an App Password
 
 2. **Check firewall/network**
+
    - Ensure port 587 (or 465 for SSL) is not blocked
    - Try pinging the SMTP server
 
 3. **Check logs**
+
    ```bash
    docker logs answerai-backend
    ```
@@ -390,9 +421,11 @@ For local testing, you can use a test SMTP service like:
 ### Verification Not Working
 
 1. **Check if email verification is enabled**
+
    - `EMAIL_VERIFICATION_ENABLED=true`
 
 2. **Check token expiration**
+
    - Default is 24 hours
    - Increase `EMAIL_VERIFICATION_TOKEN_EXPIRY` if needed
 
@@ -403,6 +436,7 @@ For local testing, you can use a test SMTP service like:
 ### User Can't Login
 
 1. **Check email verification status**
+
    ```sql
    SELECT id, email, email_verified FROM user WHERE email = 'user@example.com';
    ```
@@ -441,12 +475,14 @@ For local testing, you can use a test SMTP service like:
 ### Email Templates
 
 Edit the templates in `backend/answerai/utils/email.py`:
+
 - `get_verification_email_template()` - Main verification email
 - `send_welcome_email()` - Welcome email after verification
 
 ### Verification Logic
 
 Edit `backend/answerai/routers/email_verification.py`:
+
 - Add custom verification rules
 - Modify expiration logic
 - Add additional email types
@@ -454,6 +490,7 @@ Edit `backend/answerai/routers/email_verification.py`:
 ### Token Generation
 
 Edit `backend/answerai/models/email_verification.py`:
+
 - Modify token length
 - Change expiration handling
 - Add custom token validation
@@ -461,6 +498,7 @@ Edit `backend/answerai/models/email_verification.py`:
 ## Support
 
 For issues or questions:
+
 1. Check the logs: `docker logs answerai-backend`
 2. Review this documentation
 3. Check environment variables are set correctly

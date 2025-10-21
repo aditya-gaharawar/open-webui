@@ -49,20 +49,21 @@ python -m answerai.main
 ✅ SMTP support (Gmail, SendGrid, AWS SES, etc.)  
 ✅ Complete API endpoints  
 ✅ Database migration included  
-✅ Production-ready  
+✅ Production-ready
 
 ## 🔌 API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/v1/email-verification/verify` | POST | Verify email with token |
-| `/api/v1/email-verification/resend` | POST | Resend verification email |
-| `/api/v1/email-verification/status` | GET | Get verification status |
-| `/api/v1/email-verification/required` | GET | Check if required |
+| Endpoint                              | Method | Description               |
+| ------------------------------------- | ------ | ------------------------- |
+| `/api/v1/email-verification/verify`   | POST   | Verify email with token   |
+| `/api/v1/email-verification/resend`   | POST   | Resend verification email |
+| `/api/v1/email-verification/status`   | GET    | Get verification status   |
+| `/api/v1/email-verification/required` | GET    | Check if required         |
 
 ## 🔧 SMTP Providers
 
 ### Gmail
+
 ```bash
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
@@ -71,6 +72,7 @@ SMTP_PASSWORD=your-app-password  # Generate at https://myaccount.google.com/appp
 ```
 
 ### SendGrid
+
 ```bash
 SMTP_HOST=smtp.sendgrid.net
 SMTP_PORT=587
@@ -79,6 +81,7 @@ SMTP_PASSWORD=your-sendgrid-api-key
 ```
 
 ### AWS SES
+
 ```bash
 SMTP_HOST=email-smtp.us-east-1.amazonaws.com
 SMTP_PORT=587
@@ -87,6 +90,7 @@ SMTP_PASSWORD=your-aws-secret-access-key
 ```
 
 ### Mailgun
+
 ```bash
 SMTP_HOST=smtp.mailgun.org
 SMTP_PORT=587
@@ -129,6 +133,7 @@ curl -X POST http://localhost:8080/api/v1/email-verification/resend \
 ## 📂 Files Added/Modified
 
 ### New Files
+
 - `backend/answerai/models/email_verification.py` - Database models
 - `backend/answerai/utils/email.py` - Email utilities and templates
 - `backend/answerai/routers/email_verification.py` - API endpoints
@@ -136,6 +141,7 @@ curl -X POST http://localhost:8080/api/v1/email-verification/resend \
 - `test_email_verification.py` - SMTP testing script
 
 ### Modified Files
+
 - `backend/answerai/models/users.py` - Added `email_verified` field
 - `backend/answerai/models/auths.py` - Updated signup to support verification
 - `backend/answerai/routers/auths.py` - Integrated email verification flow
@@ -153,7 +159,7 @@ curl -X POST http://localhost:8080/api/v1/email-verification/resend \
 
 ### Login Blocked?
 
-1. Check if email is verified: 
+1. Check if email is verified:
    ```sql
    SELECT email, email_verified FROM user WHERE email='user@example.com';
    ```
@@ -165,6 +171,7 @@ curl -X POST http://localhost:8080/api/v1/email-verification/resend \
 ## 📚 Full Documentation
 
 See `EMAIL_VERIFICATION_SETUP.md` for complete documentation including:
+
 - Detailed setup instructions
 - Frontend integration examples
 - Production recommendations

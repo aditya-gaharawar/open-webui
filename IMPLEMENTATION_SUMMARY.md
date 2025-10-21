@@ -5,16 +5,19 @@
 A complete, production-grade email verification system for OpenWebUI (AnswerAI) with the following components:
 
 ### 1. **Database Layer**
+
 - ✅ New `email_verification_token` table with secure token storage
 - ✅ Added `email_verified` column to `user` table
 - ✅ Database migration with optimized indexes
 - ✅ Token expiration and usage tracking
 
 **Files:**
+
 - `backend/answerai/models/email_verification.py` - Token model and operations
 - `backend/answerai/migrations/versions/add_email_verification.py` - Migration script
 
 ### 2. **Email Service Layer**
+
 - ✅ SMTP email sending with TLS/SSL support
 - ✅ Beautiful HTML email templates (responsive design)
 - ✅ Text fallback for email clients
@@ -23,19 +26,23 @@ A complete, production-grade email verification system for OpenWebUI (AnswerAI) 
 - ✅ Welcome email after successful verification
 
 **Files:**
+
 - `backend/answerai/utils/email.py` - Email utilities and templates
 
 ### 3. **API Layer**
+
 - ✅ `POST /api/v1/email-verification/verify` - Verify email with token
 - ✅ `POST /api/v1/email-verification/resend` - Resend verification email
 - ✅ `GET /api/v1/email-verification/status` - Get verification status
 - ✅ `GET /api/v1/email-verification/required` - Check if required
 
 **Files:**
+
 - `backend/answerai/routers/email_verification.py` - API endpoints
 - `backend/answerai/main.py` - Router registration (modified)
 
 ### 4. **Authentication Integration**
+
 - ✅ Updated signup flow to create unverified users
 - ✅ Automatic verification email on signup
 - ✅ Updated signin to block unverified users
@@ -43,11 +50,13 @@ A complete, production-grade email verification system for OpenWebUI (AnswerAI) 
 - ✅ First user (admin) automatically verified
 
 **Files:**
+
 - `backend/answerai/routers/auths.py` - Updated signup/signin (modified)
 - `backend/answerai/models/auths.py` - Updated auth model (modified)
 - `backend/answerai/models/users.py` - Added email_verified field (modified)
 
 ### 5. **Testing & Documentation**
+
 - ✅ SMTP testing script
 - ✅ Comprehensive setup guide
 - ✅ Quick start guide
@@ -55,6 +64,7 @@ A complete, production-grade email verification system for OpenWebUI (AnswerAI) 
 - ✅ Troubleshooting guide
 
 **Files:**
+
 - `test_email_verification.py` - SMTP testing utility
 - `EMAIL_VERIFICATION_SETUP.md` - Detailed documentation
 - `README_EMAIL_VERIFICATION.md` - Quick reference
@@ -64,6 +74,7 @@ A complete, production-grade email verification system for OpenWebUI (AnswerAI) 
 ## 🔑 Key Features
 
 ### Security
+
 - 🔒 Cryptographically secure token generation (`secrets.token_urlsafe(32)`)
 - 🔒 Token expiration (default 24 hours, configurable)
 - 🔒 One-time use tokens
@@ -71,6 +82,7 @@ A complete, production-grade email verification system for OpenWebUI (AnswerAI) 
 - 🔒 Admin bypass for critical accounts
 
 ### User Experience
+
 - 📧 Professional email templates
 - 📧 Mobile-responsive design
 - 📧 Clear expiration warnings
@@ -78,6 +90,7 @@ A complete, production-grade email verification system for OpenWebUI (AnswerAI) 
 - 📧 Automatic redirection after verification
 
 ### Production Ready
+
 - ⚙️ Environment-based configuration
 - ⚙️ Database indexes for performance
 - ⚙️ Comprehensive error handling
@@ -85,6 +98,7 @@ A complete, production-grade email verification system for OpenWebUI (AnswerAI) 
 - ⚙️ Can be enabled/disabled easily
 
 ### Flexibility
+
 - 🔧 Works with any SMTP provider
 - 🔧 Configurable token expiry
 - 🔧 Customizable email templates
@@ -141,6 +155,7 @@ EMAIL_VERIFICATION_TOKEN_EXPIRY=86400
 ## 📝 Database Schema
 
 ### New Table: `email_verification_token`
+
 ```sql
 CREATE TABLE email_verification_token (
     id VARCHAR PRIMARY KEY,
@@ -159,6 +174,7 @@ CREATE INDEX ix_email_verification_token_expires_at ON email_verification_token(
 ```
 
 ### Modified Table: `user`
+
 ```sql
 ALTER TABLE user ADD COLUMN email_verified BOOLEAN DEFAULT 0;
 ```
@@ -166,17 +182,20 @@ ALTER TABLE user ADD COLUMN email_verified BOOLEAN DEFAULT 0;
 ## 🚀 How to Use
 
 ### 1. Test SMTP Configuration
+
 ```bash
 python test_email_verification.py
 ```
 
 ### 2. Run the Application
+
 ```bash
 cd backend
 python -m answerai.main
 ```
 
 ### 3. User Signs Up
+
 - User creates account
 - Receives verification email
 - Clicks link in email
@@ -186,6 +205,7 @@ python -m answerai.main
 ### 4. API Usage
 
 **Verify Email:**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/email-verification/verify \
   -H "Content-Type: application/json" \
@@ -193,6 +213,7 @@ curl -X POST http://localhost:8080/api/v1/email-verification/verify \
 ```
 
 **Resend Email:**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/email-verification/resend \
   -H "Content-Type: application/json" \
@@ -200,6 +221,7 @@ curl -X POST http://localhost:8080/api/v1/email-verification/resend \
 ```
 
 **Check Status:**
+
 ```bash
 curl http://localhost:8080/api/v1/email-verification/required
 ```
@@ -207,6 +229,7 @@ curl http://localhost:8080/api/v1/email-verification/required
 ## 🎨 Email Templates
 
 ### Verification Email
+
 - Modern, clean design
 - Prominent "Verify Email" button
 - Fallback link for manual copy-paste
@@ -215,6 +238,7 @@ curl http://localhost:8080/api/v1/email-verification/required
 - Professional branding
 
 ### Welcome Email
+
 - Success confirmation
 - Clean design with checkmark icon
 - Thank you message
@@ -223,6 +247,7 @@ curl http://localhost:8080/api/v1/email-verification/required
 ## 🧪 Testing
 
 ### Automated Testing
+
 ```python
 # Test SMTP connection
 python test_email_verification.py
@@ -233,6 +258,7 @@ python test_email_verification.py
 ```
 
 ### Manual Testing
+
 1. **Signup:** Create new account
 2. **Check Email:** Verify email received
 3. **Click Link:** Test verification link
@@ -241,6 +267,7 @@ python test_email_verification.py
 6. **Expiry:** Test with expired token
 
 ### Test Providers
+
 - **Mailtrap:** Free, perfect for development
 - **MailHog:** Local Docker container
 - **Gmail:** Real email testing
@@ -248,6 +275,7 @@ python test_email_verification.py
 ## 📦 Files Changed/Added
 
 ### New Files (10)
+
 1. `backend/answerai/models/email_verification.py`
 2. `backend/answerai/utils/email.py`
 3. `backend/answerai/routers/email_verification.py`
@@ -260,6 +288,7 @@ python test_email_verification.py
 10. `frontend_verification_example.svelte`
 
 ### Modified Files (4)
+
 1. `backend/answerai/models/users.py`
 2. `backend/answerai/models/auths.py`
 3. `backend/answerai/routers/auths.py`
@@ -298,22 +327,26 @@ python test_email_verification.py
 
 ### Why This Approach?
 
-1. **Separate Token Table:** 
+1. **Separate Token Table:**
+
    - Better security (tokens separate from user data)
    - Easy to implement expiry and cleanup
    - Audit trail of verification attempts
 
 2. **Environment Variables:**
+
    - Easy deployment configuration
    - No hardcoded credentials
    - Different configs for dev/staging/prod
 
 3. **HTML + Text Emails:**
+
    - Better user experience
    - Fallback for old email clients
    - Accessibility
 
 4. **Admin Bypass:**
+
    - System administrators need immediate access
    - First user becomes admin automatically
    - No lockout scenarios
