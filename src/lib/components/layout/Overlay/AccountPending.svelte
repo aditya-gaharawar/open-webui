@@ -2,13 +2,14 @@
 	import DOMPurify from 'dompurify';
 	import { marked } from 'marked';
 
-	import { getAdminDetails } from '$lib/apis/auths';
+import { getAdminDetails, resendVerification } from '$lib/apis/auths';
 	import { onMount, tick, getContext } from 'svelte';
 	import { config } from '$lib/stores';
 
 	const i18n = getContext('i18n');
 
 	let adminDetails = null;
+let sending = false;
 
 	onMount(async () => {
 		adminDetails = await getAdminDetails(localStorage.token).catch((err) => {
@@ -68,6 +69,25 @@
 					>
 						{$i18n.t('Check Again')}
 					</button>
+
+                    <button
+                        class="relative z-20 flex mt-3 px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition font-medium text-sm disabled:opacity-60"
+                        disabled={sending}
+                        on:click={async () => {
+                            try {
+                                sending = true;
+                                await resendVerification($user?.email ?? '');
+                                alert($i18n.t('Verification email sent.'));
+                            } catch (e) {
+                                console.error(e);
+                                alert($i18n.t('Failed to send verification email.'));
+                            } finally {
+                                sending = false;
+                            }
+                        }}
+                    >
+                        {sending ? $i18n.t('Sending...') : $i18n.t('Resend Verification Email')}
+                    </button>
 
 					<button
 						class="text-xs text-center w-full mt-2 text-gray-400 underline"

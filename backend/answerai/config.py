@@ -436,6 +436,61 @@ GITHUB_CLIENT_REDIRECT_URI = PersistentConfig(
     os.environ.get("GITHUB_CLIENT_REDIRECT_URI", ""),
 )
 
+####################################
+# Email/SMTP and Email Verification
+####################################
+
+SMTP_HOST = PersistentConfig(
+    "SMTP_HOST", "email.smtp.host", os.environ.get("SMTP_HOST", "")
+)
+SMTP_PORT = PersistentConfig(
+    "SMTP_PORT",
+    "email.smtp.port",
+    int(os.environ.get("SMTP_PORT", "587") or 587),
+)
+SMTP_USERNAME = PersistentConfig(
+    "SMTP_USERNAME",
+    "email.smtp.username",
+    os.environ.get("SMTP_USERNAME", ""),
+)
+SMTP_PASSWORD = PersistentConfig(
+    "SMTP_PASSWORD",
+    "email.smtp.password",
+    os.environ.get("SMTP_PASSWORD", ""),
+)
+SMTP_STARTTLS = PersistentConfig(
+    "SMTP_STARTTLS",
+    "email.smtp.starttls",
+    os.environ.get("SMTP_STARTTLS", "True").lower() == "true",
+)
+EMAIL_FROM_ADDRESS = PersistentConfig(
+    "EMAIL_FROM_ADDRESS",
+    "email.from.address",
+    os.environ.get("EMAIL_FROM_ADDRESS", ""),
+)
+EMAIL_FROM_NAME = PersistentConfig(
+    "EMAIL_FROM_NAME",
+    "email.from.name",
+    os.environ.get("EMAIL_FROM_NAME", "ANSWERAI"),
+)
+
+EMAIL_VERIFICATION_ENABLED = PersistentConfig(
+    "EMAIL_VERIFICATION_ENABLED",
+    "email.verification.enabled",
+    os.environ.get("EMAIL_VERIFICATION_ENABLED", "False").lower() == "true",
+)
+EMAIL_VERIFICATION_EXPIRES_IN_SECONDS = PersistentConfig(
+    "EMAIL_VERIFICATION_EXPIRES_IN_SECONDS",
+    "email.verification.expires_in_seconds",
+    int(os.environ.get("EMAIL_VERIFICATION_EXPIRES_IN_SECONDS", "86400") or 86400),
+)
+EMAIL_VERIFICATION_PROMOTE_ROLE = PersistentConfig(
+    "EMAIL_VERIFICATION_PROMOTE_ROLE",
+    "email.verification.promote_role",
+    os.environ.get("EMAIL_VERIFICATION_PROMOTE_ROLE", "True").lower()
+    == "true",
+)
+
 OAUTH_CLIENT_ID = PersistentConfig(
     "OAUTH_CLIENT_ID",
     "oauth.oidc.client_id",

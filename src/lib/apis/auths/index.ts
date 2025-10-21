@@ -352,6 +352,26 @@ export const userSignOut = async () => {
 	return res;
 };
 
+export const resendVerification = async (email: string) => {
+  let error = null;
+  const res = await fetch(`${ANSWERAI_API_BASE_URL}/auths/resend-verification`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email })
+  })
+    .then(async (res) => {
+      if (!res.ok) throw await res.json();
+      return res.json();
+    })
+    .catch((err) => {
+      console.error(err);
+      error = err.detail;
+      return null;
+    });
+  if (error) throw error;
+  return res;
+};
+
 export const addUser = async (
 	token: string,
 	name: string,
