@@ -17,7 +17,8 @@ from answerai.models.auths import (
     UpdatePasswordForm,
     UserResponse,
 )
-from answerai.models.users import Users, UpdateProfileForm
+from answerai.models.users import Users, UpdateProfileForm, UserModel
+from answerai.models.email_verifications import EmailVerifications
 from answerai.models.groups import Groups
 from answerai.models.oauth_sessions import OAuthSessions
 
@@ -39,6 +40,7 @@ from answerai.config import OPENID_PROVIDER_URL, ENABLE_OAUTH_SIGNUP, ENABLE_LDA
 from pydantic import BaseModel
 
 from answerai.utils.misc import parse_duration, validate_email_format
+from answerai.utils.email import send_email_smtp
 from answerai.utils.auth import (
     decode_token,
     create_api_key,
@@ -609,6 +611,48 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
         )
 
         if user:
+            # If email verification is enabled, create token and email
+            if request.app.state.config.EMAIL_VERIFICATION_ENABLED:
+                try:
+                    import secrets
+
+                    # Generate a short random token presented to the user via link; store only hash
+                    token = secrets.token_urlsafe(32)
+                    EmailVerifications.create_token(
+                        user_id=user.id,
+                        token=token,
+                        expires_in_seconds=request.app.state.config.EMAIL_VERIFICATION_EXPIRES_IN_SECONDS,
+                    )
+
+                    # Compose verification URL
+                    base_url = request.app.state.config.WEBUI_URL or request.base_url._url.rstrip("/")
+                    verify_url = f"{base_url}/api/v1/auths/verify-email?token={token}"
+
+                    subject = f"Verify your email for {request.app.state.ANSWERAI_NAME}"
+                    html = (
+                        f"<p>Hi {user.name},</p>"
+                        f"<p>Please verify your email by clicking the button below:</p>"
+                        f"<p><a href='{verify_url}' style='padding:10px 16px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none'>Verify Email</a></p>"
+                        f"<p>If the button doesn't work, copy and paste this URL into your browser:</p>"
+                        f"<p><a href='{verify_url}'>{verify_url}</a></p>"
+                    )
+
+                    # Send email via SMTP
+                    send_email_smtp(
+                        host=request.app.state.config.SMTP_HOST,
+                        port=int(request.app.state.config.SMTP_PORT),
+                        username=(request.app.state.config.SMTP_USERNAME or None),
+                        password=(request.app.state.config.SMTP_PASSWORD or None),
+                        starttls=bool(request.app.state.config.SMTP_STARTTLS),
+                        from_email=request.app.state.config.EMAIL_FROM_ADDRESS,
+                        from_name=request.app.state.config.EMAIL_FROM_NAME,
+                        to_email=user.email,
+                        subject=subject,
+                        html_body=html,
+                    )
+                except Exception as e:
+                    log.error(f"Failed to send verification email: {e}")
+
             expires_delta = parse_duration(request.app.state.config.JWT_EXPIRES_IN)
             expires_at = None
             if expires_delta:
@@ -923,6 +967,113 @@ async def update_admin_config(
         "PENDING_USER_OVERLAY_CONTENT": request.app.state.config.PENDING_USER_OVERLAY_CONTENT,
         "RESPONSE_WATERMARK": request.app.state.config.RESPONSE_WATERMARK,
     }
+
+
+############################
+# Email Verification
+############################
+
+
+class VerifyEmailResponse(BaseModel):
+    status: bool
+    message: str
+
+
+@router.get("/verify-email", response_model=VerifyEmailResponse)
+async def verify_email(request: Request, token: str):
+    if not request.app.state.config.EMAIL_VERIFICATION_ENABLED:
+        raise HTTPException(400, detail=ERROR_MESSAGES.ACTION_PROHIBITED)
+
+    from answerai.models.email_verifications import EmailVerifications
+
+    token_row = EmailVerifications.get_by_token(token)
+    if not token_row:
+        raise HTTPException(400, detail="Invalid or expired token")
+
+    current_time = int(time.time())
+    if token_row.expires_at < current_time:
+        raise HTTPException(400, detail="Token expired")
+
+    user = Users.get_user_by_id(token_row.user_id)
+    if not user:
+        raise HTTPException(404, detail=ERROR_MESSAGES.USER_NOT_FOUND)
+
+    # Mark user as verified
+    updated = Users.update_user_by_id(
+        user.id, {"email_verified_at": current_time}
+    )
+    if not updated:
+        raise HTTPException(500, detail=ERROR_MESSAGES.DEFAULT())
+
+    # Optionally promote role from pending to user
+    if (
+        request.app.state.config.EMAIL_VERIFICATION_PROMOTE_ROLE
+        and (updated.role == "pending")
+    ):
+        Users.update_user_role_by_id(updated.id, "user")
+
+    EmailVerifications.delete_by_user_id(user.id)
+
+    return {"status": True, "message": "Email verified successfully"}
+
+
+class ResendVerificationRequest(BaseModel):
+    email: str
+
+
+@router.post("/resend-verification", response_model=VerifyEmailResponse)
+async def resend_verification(request: Request, form_data: ResendVerificationRequest):
+    if not request.app.state.config.EMAIL_VERIFICATION_ENABLED:
+        raise HTTPException(400, detail=ERROR_MESSAGES.ACTION_PROHIBITED)
+
+    user = Users.get_user_by_email(form_data.email.lower())
+    if not user:
+        raise HTTPException(404, detail=ERROR_MESSAGES.USER_NOT_FOUND)
+
+    if user.email_verified_at:
+        return {"status": True, "message": "Email already verified"}
+
+    # Create a new token and email
+    try:
+        import secrets
+        from answerai.models.email_verifications import EmailVerifications
+
+        token = secrets.token_urlsafe(32)
+        EmailVerifications.create_token(
+            user_id=user.id,
+            token=token,
+            expires_in_seconds=request.app.state.config.EMAIL_VERIFICATION_EXPIRES_IN_SECONDS,
+        )
+
+        base_url = request.app.state.config.WEBUI_URL or request.base_url._url.rstrip("/")
+        verify_url = f"{base_url}/api/v1/auths/verify-email?token={token}"
+
+        subject = f"Verify your email for {request.app.state.ANSWERAI_NAME}"
+        html = (
+            f"<p>Hi {user.name},</p>"
+            f"<p>Please verify your email by clicking the button below:</p>"
+            f"<p><a href='{verify_url}' style='padding:10px 16px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none'>Verify Email</a></p>"
+            f"<p>If the button doesn't work, copy and paste this URL into your browser:</p>"
+            f"<p><a href='{verify_url}'>{verify_url}</a></p>"
+        )
+
+        send_email_smtp(
+            host=request.app.state.config.SMTP_HOST,
+            port=int(request.app.state.config.SMTP_PORT),
+            username=(request.app.state.config.SMTP_USERNAME or None),
+            password=(request.app.state.config.SMTP_PASSWORD or None),
+            starttls=bool(request.app.state.config.SMTP_STARTTLS),
+            from_email=request.app.state.config.EMAIL_FROM_ADDRESS,
+            from_name=request.app.state.config.EMAIL_FROM_NAME,
+            to_email=user.email,
+            subject=subject,
+            html_body=html,
+        )
+    except Exception as e:
+        log.error(f"Failed to send verification email: {e}")
+        raise HTTPException(500, detail=ERROR_MESSAGES.DEFAULT())
+
+    return {"status": True, "message": "Verification email sent"}
 
 
 class LdapServerConfig(BaseModel):
