@@ -62,7 +62,17 @@ def run_migrations():
         migrations_path = OPEN_WEBUI_DIR / "migrations"
         alembic_cfg.set_main_option("script_location", str(migrations_path))
 
-        command.upgrade(alembic_cfg, "head")
+        try:
+            # Try normal upgrade first
+            command.upgrade(alembic_cfg, "head")
+        except Exception as e:
+            # If multiple heads exist, attempt to upgrade to all heads
+            err = str(e)
+            if "Multiple head revisions are present" in err or "Multiple heads are present" in err:
+                log.warning("Multiple Alembic heads detected; attempting to upgrade all heads")
+                command.upgrade(alembic_cfg, "heads")
+            else:
+                raise
     except Exception as e:
         log.exception(f"Error running migrations: {e}")
 
@@ -117,9 +127,14 @@ DEFAULT_CONFIG = {
 
 
 def get_config():
-    with get_db() as db:
-        config_entry = db.query(Config).order_by(Config.id.desc()).first()
-        return config_entry.data if config_entry else DEFAULT_CONFIG
+    try:
+        with get_db() as db:
+            config_entry = db.query(Config).order_by(Config.id.desc()).first()
+            return config_entry.data if config_entry else DEFAULT_CONFIG
+    except Exception as e:
+        # Handle case where the table does not yet exist
+        log.warning(f"Config table unavailable, using defaults: {e}")
+        return DEFAULT_CONFIG
 
 
 CONFIG_DATA = get_config()
