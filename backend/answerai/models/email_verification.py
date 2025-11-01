@@ -7,7 +7,7 @@ from typing import Optional
 from answerai.internal.db import Base, get_db
 from answerai.env import SRC_LOG_LEVELS
 from pydantic import BaseModel
-from sqlalchemy import BigInteger, Column, String, Text, Boolean
+from sqlalchemy import BigInteger, Column, String, Text, Boolean, ForeignKey
 
 log = logging.getLogger(__name__)
 log.setLevel(SRC_LOG_LEVELS["MODELS"])
@@ -21,7 +21,7 @@ class EmailVerificationToken(Base):
     __tablename__ = "email_verification_token"
 
     id = Column(String, primary_key=True)
-    user_id = Column(String, nullable=False)
+    user_id = Column(String, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     token = Column(String, unique=True, nullable=False)
     email = Column(String, nullable=False)
     expires_at = Column(BigInteger, nullable=False)
@@ -115,6 +115,8 @@ class EmailVerificationTokensTable:
     def verify_token(self, token: str) -> tuple[bool, Optional[str], Optional[str]]:
         """
         Verify a token and return (is_valid, user_id, error_message)
+        Note: This only validates the token, does not mark it as used.
+        Call mark_token_as_used() after successfully updating the user.
         """
         try:
             with get_db() as db:
@@ -132,16 +134,25 @@ class EmailVerificationTokensTable:
                 if current_time > token_obj.expires_at:
                     return False, None, "Verification token has expired"
 
-                # Mark token as used
-                db.query(EmailVerificationToken).filter_by(token=token).update(
-                    {"used": True}
-                )
-                db.commit()
-
                 return True, token_obj.user_id, None
         except Exception as e:
             log.error(f"Error verifying token: {e}")
             return False, None, "An error occurred during verification"
+
+    def mark_token_as_used(self, token: str) -> bool:
+        """
+        Mark a token as used. Call this AFTER successfully updating the user.
+        """
+        try:
+            with get_db() as db:
+                db.query(EmailVerificationToken).filter_by(token=token).update(
+                    {"used": True}
+                )
+                db.commit()
+                return True
+        except Exception as e:
+            log.error(f"Error marking token as used: {e}")
+            return False
 
     def delete_expired_tokens(self) -> int:
         """Delete all expired tokens"""

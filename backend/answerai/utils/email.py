@@ -39,7 +39,7 @@ EMAIL_VERIFICATION_TOKEN_EXPIRY = int(
 def is_email_configured() -> bool:
     """Check if email/SMTP is properly configured"""
     required_settings = [SMTP_HOST, SMTP_PORT, SMTP_FROM_EMAIL]
-    return all(required_settings) and EMAIL_VERIFICATION_ENABLED
+    return all(required_settings)
 
 
 def send_email(

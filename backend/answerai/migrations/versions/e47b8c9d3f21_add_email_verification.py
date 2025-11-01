@@ -18,10 +18,22 @@ depends_on = None
 
 
 def upgrade():
-    # Add email_verified column to user table
+    # Add email_verified column to user table with nullable=True initially
     op.add_column(
         "user",
-        sa.Column("email_verified", sa.Boolean(), nullable=True, server_default="0"),
+        sa.Column("email_verified", sa.Boolean(), nullable=True),
+    )
+
+    # Set all existing users to email_verified=True (they were already using the system)
+    # This prevents locking out existing users when email verification is enabled
+    op.execute("UPDATE user SET email_verified = true WHERE email_verified IS NULL")
+
+    # Now set the default for future rows
+    op.alter_column(
+        "user",
+        "email_verified",
+        server_default=sa.text("false"),
+        nullable=True,
     )
 
     # Create email_verification_token table
@@ -32,9 +44,10 @@ def upgrade():
         sa.Column("token", sa.String(), nullable=False),
         sa.Column("email", sa.String(), nullable=False),
         sa.Column("expires_at", sa.BigInteger(), nullable=False),
-        sa.Column("used", sa.Boolean(), nullable=False, server_default="0"),
+        sa.Column("used", sa.Boolean(), nullable=False, server_default=sa.text("false")),
         sa.Column("created_at", sa.BigInteger(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
+        sa.ForeignKeyConstraint(["user_id"], ["user.id"], ondelete="CASCADE"),
         sa.UniqueConstraint("token"),
     )
 
