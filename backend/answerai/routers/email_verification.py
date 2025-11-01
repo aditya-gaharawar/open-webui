@@ -90,7 +90,7 @@ async def verify_email(form_data: VerifyEmailForm):
             detail="Email is not properly configured",
         )
 
-    # Verify the token
+    # Verify the token (validates but doesn't mark as used yet)
     is_valid, user_id, error_message = EmailVerificationTokens.verify_token(
         form_data.token
     )
@@ -117,6 +117,9 @@ async def verify_email(form_data: VerifyEmailForm):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to update user verification status",
         )
+
+    # Now mark the token as used (only after user is successfully updated)
+    EmailVerificationTokens.mark_token_as_used(form_data.token)
 
     # Send welcome email (optional, don't fail if it doesn't send)
     try:
