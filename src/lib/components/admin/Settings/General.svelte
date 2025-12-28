@@ -145,10 +145,7 @@
 									</Tooltip>
 
 									{#if $config?.features?.enable_version_update_check}
-										<a
-											href="https://github.com/open-webui/open-webui/releases/tag/v{version.latest}"
-											target="_blank"
-										>
+										<a href="https://answerai.in/releases/tag/v{version.latest}" target="_blank">
 											{updateAvailable === null
 												? $i18n.t('Checking for updates...')
 												: updateAvailable
@@ -190,13 +187,13 @@
 									{$i18n.t('Help')}
 								</div>
 								<div class=" text-xs text-gray-500">
-									{$i18n.t('Discover how to use Open WebUI and seek support from the community.')}
+									{$i18n.t('Discover how to use ANSWERAI and seek support from the community.')}
 								</div>
 							</div>
 
 							<a
 								class="flex-shrink-0 text-xs font-medium underline"
-								href="https://docs.openwebui.com/"
+								href="https://docs.answerai.in/"
 								target="_blank"
 							>
 								{$i18n.t('Documentation')}
@@ -212,17 +209,17 @@
 									/>
 								</a>
 
-								<a href="https://twitter.com/OpenWebUI" target="_blank">
+								<a href="https://twitter.com/ANSWERAI" target="_blank">
 									<img
 										alt="X (formerly Twitter) Follow"
-										src="https://img.shields.io/twitter/follow/OpenWebUI"
+										src="https://img.shields.io/twitter/follow/ANSWERAI"
 									/>
 								</a>
 
-								<a href="https://github.com/open-webui/open-webui" target="_blank">
+								<a href="https://answerai.in" target="_blank">
 									<img
 										alt="Github Repo"
-										src="https://img.shields.io/github/stars/open-webui/open-webui?style=social&label=Star us on Github"
+										src="https://img.shields.io/github/stars/answerai/answerai?style=social&label=Star us on Github"
 									/>
 								</a>
 							</div>
@@ -238,7 +235,7 @@
 
 								{#if $config?.license_metadata}
 									<a
-										href="https://docs.openwebui.com/enterprise"
+										href="https://docs.answerai.in/enterprise"
 										target="_blank"
 										class="text-gray-500 mt-0.5"
 									>
@@ -263,7 +260,7 @@
 								{:else}
 									<a
 										class=" text-xs hover:underline"
-										href="https://docs.openwebui.com/enterprise"
+										href="https://docs.answerai.in/enterprise"
 										target="_blank"
 									>
 										<span class="text-gray-500">
@@ -387,9 +384,9 @@
 								/>
 
 								<div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
-									<!-- https://docs.openwebui.com/getting-started/advanced-topics/api-endpoints -->
+									<!-- https://docs.answerai.in/getting-started/advanced-topics/api-endpoints -->
 									<a
-										href="https://docs.openwebui.com/getting-started/api-endpoints"
+										href="https://docs.answerai.in/getting-started/api-endpoints"
 										target="_blank"
 										class=" text-gray-300 font-medium underline"
 									>
@@ -430,7 +427,7 @@
 										<span class=" font-medium">{$i18n.t('Warning')}:</span>
 										<span
 											><a
-												href="https://docs.openwebui.com/getting-started/env-configuration#jwt_expires_in"
+												href="https://docs.answerai.in/getting-started/env-configuration#jwt_expires_in"
 												target="_blank"
 												class=" underline"
 												>{$i18n.t('No expiration can pose security risks.')}

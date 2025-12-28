@@ -20,7 +20,7 @@ from open_webui.config import (
 
 class OpenSearchClient(VectorDBBase):
     def __init__(self):
-        self.index_prefix = "open_webui"
+        self.index_prefix = "answerai"
         self.client = OpenSearch(
             hosts=[OPENSEARCH_URI],
             use_ssl=OPENSEARCH_SSL,

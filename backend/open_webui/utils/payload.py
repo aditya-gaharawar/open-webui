@@ -60,17 +60,17 @@ def apply_model_params_to_body(
     return form_data
 
 
-def remove_open_webui_params(params: dict) -> dict:
+def remove_answerai_params(params: dict) -> dict:
     """
-    Removes OpenWebUI specific parameters from the provided dictionary.
+    Removes ANSWERAI specific parameters from the provided dictionary.
 
     Args:
         params (dict): The dictionary containing parameters.
 
     Returns:
-        dict: The modified dictionary with OpenWebUI parameters removed.
+        dict: The modified dictionary with ANSWERAI parameters removed.
     """
-    open_webui_params = {
+    answerai_params = {
         "stream_response": bool,
         "stream_delta_chunk_size": int,
         "function_calling": str,
@@ -79,7 +79,7 @@ def remove_open_webui_params(params: dict) -> dict:
     }
 
     for key in list(params.keys()):
-        if key in open_webui_params:
+        if key in answerai_params:
             del params[key]
 
     return params
@@ -87,7 +87,7 @@ def remove_open_webui_params(params: dict) -> dict:
 
 # inplace function: form_data is modified
 def apply_model_params_to_body_openai(params: dict, form_data: dict) -> dict:
-    params = remove_open_webui_params(params)
+    params = remove_answerai_params(params)
 
     custom_params = params.pop("custom_params", {})
     if custom_params:
@@ -121,7 +121,7 @@ def apply_model_params_to_body_openai(params: dict, form_data: dict) -> dict:
 
 
 def apply_model_params_to_body_ollama(params: dict, form_data: dict) -> dict:
-    params = remove_open_webui_params(params)
+    params = remove_answerai_params(params)
 
     custom_params = params.pop("custom_params", {})
     if custom_params:

@@ -20,7 +20,7 @@ class TestAuths(AbstractPostgresTest):
         assert response.json() == {
             "id": "1",
             "name": "John Doe",
-            "email": "john.doe@openwebui.com",
+            "email": "john.doe@answerai.com",
             "role": "user",
             "profile_image_url": "/user.png",
         }
@@ -29,7 +29,7 @@ class TestAuths(AbstractPostgresTest):
         from open_webui.utils.auth import get_password_hash
 
         user = self.auths.insert_new_auth(
-            email="john.doe@openwebui.com",
+            email="john.doe@answerai.com",
             password=get_password_hash("old_password"),
             name="John Doe",
             profile_image_url="/user.png",
@@ -50,7 +50,7 @@ class TestAuths(AbstractPostgresTest):
         from open_webui.utils.auth import get_password_hash
 
         user = self.auths.insert_new_auth(
-            email="john.doe@openwebui.com",
+            email="john.doe@answerai.com",
             password=get_password_hash("old_password"),
             name="John Doe",
             profile_image_url="/user.png",
@@ -64,20 +64,16 @@ class TestAuths(AbstractPostgresTest):
             )
         assert response.status_code == 200
 
-        old_auth = self.auths.authenticate_user(
-            "john.doe@openwebui.com", "old_password"
-        )
+        old_auth = self.auths.authenticate_user("john.doe@answerai.com", "old_password")
         assert old_auth is None
-        new_auth = self.auths.authenticate_user(
-            "john.doe@openwebui.com", "new_password"
-        )
+        new_auth = self.auths.authenticate_user("john.doe@answerai.com", "new_password")
         assert new_auth is not None
 
     def test_signin(self):
         from open_webui.utils.auth import get_password_hash
 
         user = self.auths.insert_new_auth(
-            email="john.doe@openwebui.com",
+            email="john.doe@answerai.com",
             password=get_password_hash("password"),
             name="John Doe",
             profile_image_url="/user.png",
@@ -85,13 +81,13 @@ class TestAuths(AbstractPostgresTest):
         )
         response = self.fast_api_client.post(
             self.create_url("/signin"),
-            json={"email": "john.doe@openwebui.com", "password": "password"},
+            json={"email": "john.doe@answerai.com", "password": "password"},
         )
         assert response.status_code == 200
         data = response.json()
         assert data["id"] == user.id
         assert data["name"] == "John Doe"
-        assert data["email"] == "john.doe@openwebui.com"
+        assert data["email"] == "john.doe@answerai.com"
         assert data["role"] == "user"
         assert data["profile_image_url"] == "/user.png"
         assert data["token"] is not None and len(data["token"]) > 0
@@ -102,7 +98,7 @@ class TestAuths(AbstractPostgresTest):
             self.create_url("/signup"),
             json={
                 "name": "John Doe",
-                "email": "john.doe@openwebui.com",
+                "email": "john.doe@answerai.com",
                 "password": "password",
             },
         )
@@ -110,7 +106,7 @@ class TestAuths(AbstractPostgresTest):
         data = response.json()
         assert data["id"] is not None and len(data["id"]) > 0
         assert data["name"] == "John Doe"
-        assert data["email"] == "john.doe@openwebui.com"
+        assert data["email"] == "john.doe@answerai.com"
         assert data["role"] in ["admin", "user", "pending"]
         assert data["profile_image_url"] == "/user.png"
         assert data["token"] is not None and len(data["token"]) > 0
@@ -122,7 +118,7 @@ class TestAuths(AbstractPostgresTest):
                 self.create_url("/add"),
                 json={
                     "name": "John Doe 2",
-                    "email": "john.doe2@openwebui.com",
+                    "email": "john.doe2@answerai.com",
                     "password": "password2",
                     "role": "admin",
                 },
@@ -131,7 +127,7 @@ class TestAuths(AbstractPostgresTest):
         data = response.json()
         assert data["id"] is not None and len(data["id"]) > 0
         assert data["name"] == "John Doe 2"
-        assert data["email"] == "john.doe2@openwebui.com"
+        assert data["email"] == "john.doe2@answerai.com"
         assert data["role"] == "admin"
         assert data["profile_image_url"] == "/user.png"
         assert data["token"] is not None and len(data["token"]) > 0
@@ -139,7 +135,7 @@ class TestAuths(AbstractPostgresTest):
 
     def test_get_admin_details(self):
         self.auths.insert_new_auth(
-            email="john.doe@openwebui.com",
+            email="john.doe@answerai.com",
             password="password",
             name="John Doe",
             profile_image_url="/user.png",
@@ -151,12 +147,12 @@ class TestAuths(AbstractPostgresTest):
         assert response.status_code == 200
         assert response.json() == {
             "name": "John Doe",
-            "email": "john.doe@openwebui.com",
+            "email": "john.doe@answerai.com",
         }
 
     def test_create_api_key_(self):
         user = self.auths.insert_new_auth(
-            email="john.doe@openwebui.com",
+            email="john.doe@answerai.com",
             password="password",
             name="John Doe",
             profile_image_url="/user.png",
@@ -171,7 +167,7 @@ class TestAuths(AbstractPostgresTest):
 
     def test_delete_api_key(self):
         user = self.auths.insert_new_auth(
-            email="john.doe@openwebui.com",
+            email="john.doe@answerai.com",
             password="password",
             name="John Doe",
             profile_image_url="/user.png",
@@ -187,7 +183,7 @@ class TestAuths(AbstractPostgresTest):
 
     def test_get_api_key(self):
         user = self.auths.insert_new_auth(
-            email="john.doe@openwebui.com",
+            email="john.doe@answerai.com",
             password="password",
             name="John Doe",
             profile_image_url="/user.png",
