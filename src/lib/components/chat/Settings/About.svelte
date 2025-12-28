@@ -61,10 +61,7 @@
 						</Tooltip>
 
 						{#if $config?.features?.enable_version_update_check}
-							<a
-								href="https://answerai.in/releases/tag/v{version.latest}"
-								target="_blank"
-							>
+							<a href="https://answerai.in/releases/tag/v{version.latest}" target="_blank">
 								{updateAvailable === null
 									? $i18n.t('Checking for updates...')
 									: updateAvailable
@@ -158,9 +155,7 @@
 					href="https://answerai.in"
 					target="_blank"
 					class="underline">ANSWERAI Inc.</a
-				> <a href="https://answerai.in/blob/main/LICENSE" target="_blank"
-					>All rights reserved.</a
-				>
+				> <a href="https://answerai.in/blob/main/LICENSE" target="_blank">All rights reserved.</a>
 </pre>
 		</div>
 

@@ -4,7 +4,11 @@ import { browser, dev } from '$app/environment';
 export const APP_NAME = 'ANSWERAI';
 
 export const WEBUI_HOSTNAME = browser ? (dev ? `${location.hostname}:12000` : ``) : '';
-export const WEBUI_BASE_URL = browser ? (dev ? `https://work-1-qdbfjafccqlnftyi.prod-runtime.all-hands.dev` : ``) : ``;
+export const WEBUI_BASE_URL = browser
+	? dev
+		? `https://work-1-qdbfjafccqlnftyi.prod-runtime.all-hands.dev`
+		: ``
+	: ``;
 export const WEBUI_API_BASE_URL = `${WEBUI_BASE_URL}/api/v1`;
 
 export const OLLAMA_API_BASE_URL = `${WEBUI_BASE_URL}/ollama`;
