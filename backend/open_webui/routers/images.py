@@ -20,6 +20,7 @@ from open_webui.env import ENABLE_FORWARD_USER_INFO_HEADERS
 
 from open_webui.models.chats import Chats
 from open_webui.routers.files import upload_file_handler, get_file_content_by_id
+from open_webui.retrieval.web.utils import validate_url
 from open_webui.utils.auth import get_admin_user, get_verified_user
 from open_webui.utils.headers import include_user_info_headers
 from open_webui.utils.images.comfyui import (
@@ -470,6 +471,7 @@ GenerateImageForm = CreateImageForm  # Alias for backward compatibility
 def get_image_data(data: str, headers=None):
     try:
         if data.startswith("http://") or data.startswith("https://"):
+            validate_url(data)
             if headers:
                 r = requests.get(data, headers=headers)
             else:
@@ -845,6 +847,7 @@ async def image_edits(
 
         async def load_url_image(data):
             if data.startswith("http://") or data.startswith("https://"):
+                validate_url(data)
                 r = await asyncio.to_thread(requests.get, data)
                 r.raise_for_status()
 
