@@ -14,7 +14,7 @@
 	import SensitiveInput from '$lib/components/common/SensitiveInput.svelte';
 	import Switch from '$lib/components/common/Switch.svelte';
 	import Tooltip from '$lib/components/common/Tooltip.svelte';
-	import { WEBUI_BUILD_HASH, WEBUI_VERSION } from '$lib/constants';
+	import { ANSWERAI_BUILD_HASH, ANSWERAI_VERSION } from '$lib/constants';
 	import { config, showChangelog } from '$lib/stores';
 	import { compareVersion } from '$lib/utils';
 	import { onMount, getContext } from 'svelte';
@@ -56,8 +56,8 @@
 		updateAvailable = null;
 		version = await getVersionUpdates(localStorage.token).catch((error) => {
 			return {
-				current: WEBUI_VERSION,
-				latest: WEBUI_VERSION
+				current: ANSWERAI_VERSION,
+				latest: ANSWERAI_VERSION
 			};
 		});
 
@@ -140,8 +140,8 @@
 						<div class="flex w-full justify-between items-center">
 							<div class="flex flex-col text-xs text-gray-700 dark:text-gray-200">
 								<div class="flex gap-1">
-									<Tooltip content={WEBUI_BUILD_HASH}>
-										v{WEBUI_VERSION}
+									<Tooltip content={ANSWERAI_BUILD_HASH}>
+										v{ANSWERAI_VERSION}
 									</Tooltip>
 
 									{#if $config?.features?.enable_version_update_check}
@@ -205,7 +205,7 @@
 								<a href="https://discord.gg/5rJgQTnV4s" target="_blank">
 									<img
 										alt="Discord"
-										src="https://img.shields.io/badge/Discord-Open_WebUI-blue?logo=discord&logoColor=white"
+										src="https://img.shields.io/badge/Discord-AnswerAI-blue?logo=discord&logoColor=white"
 									/>
 								</a>
 
@@ -717,7 +717,7 @@
 
 					<div class="mb-2.5 w-full justify-between">
 						<div class="flex w-full justify-between">
-							<div class=" self-center text-xs font-medium">{$i18n.t('WebUI URL')}</div>
+							<div class=" self-center text-xs font-medium">{$i18n.t('AnswerAI URL')}</div>
 						</div>
 
 						<div class="flex mt-2 space-x-2">
@@ -725,13 +725,13 @@
 								class="w-full rounded-lg py-2 px-4 text-sm bg-gray-50 dark:text-gray-300 dark:bg-gray-850 outline-hidden"
 								type="text"
 								placeholder={`e.g.) "http://localhost:3000"`}
-								bind:value={adminConfig.WEBUI_URL}
+								bind:value={adminConfig.ANSWERAI_URL}
 							/>
 						</div>
 
 						<div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
 							{$i18n.t(
-								'Enter the public URL of your WebUI. This URL will be used to generate links in the notifications.'
+								'Enter the public URL of your AnswerAI. This URL will be used to generate links in the notifications.'
 							)}
 						</div>
 					</div>

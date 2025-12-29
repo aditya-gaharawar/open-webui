@@ -8,5 +8,5 @@ _test
 Pipfile
 !/data
 /data/*
-/open_webui/data/*
-.webui_secret_key
+/answer_ai/data/*
+.answerai_secret_key

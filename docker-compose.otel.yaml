@@ -13,7 +13,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/answerai/answerai:${WEBUI_DOCKER_TAG-main}
+    image: ghcr.io/answerai/answerai:${ANSWERAI_DOCKER_TAG-main}
     container_name: answerai
     volumes:
       - answerai:/app/backend/data

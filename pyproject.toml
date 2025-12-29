@@ -162,7 +162,7 @@ all = [
 ]
 
 [project.scripts]
-answerai = "open_webui:app"
+answerai = "answer_ai:app"
 
 [build-system]
 requires = ["hatchling"]
@@ -186,15 +186,15 @@ sources = ["backend"]
 exclude = [
     ".dockerignore",
     ".gitignore",
-    ".webui_secret_key",
+    ".answerai_secret_key",
     "dev.sh",
     "requirements.txt",
     "start.sh",
     "start_windows.bat",
-    "webui.db",
+    "answerai.db",
     "chroma.sqlite3",
 ]
-force-include = { "CHANGELOG.md" = "open_webui/CHANGELOG.md", build = "open_webui/frontend" }
+force-include = { "CHANGELOG.md" = "answer_ai/CHANGELOG.md", build = "answer_ai/frontend" }
 
 [tool.codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file

@@ -16,7 +16,7 @@
 	import { formatDate } from '$lib/utils';
 
 	import { settings, user, shortCodesToEmojis } from '$lib/stores';
-	import { WEBUI_API_BASE_URL, WEBUI_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_API_BASE_URL, ANSWERAI_BASE_URL } from '$lib/constants';
 	import { getMessageData } from '$lib/apis/channels';
 
 	import Markdown from '$lib/components/chat/Messages/Markdown.svelte';
@@ -238,14 +238,14 @@
 				>
 					{#if message?.reply_to_message?.meta?.model_id}
 						<img
-							src={`${WEBUI_API_BASE_URL}/models/model/profile/image?id=${message.reply_to_message.meta.model_id}`}
+							src={`${ANSWERAI_API_BASE_URL}/models/model/profile/image?id=${message.reply_to_message.meta.model_id}`}
 							alt={message.reply_to_message.meta.model_name ??
 								message.reply_to_message.meta.model_id}
 							class="size-4 ml-0.5 rounded-full object-cover"
 						/>
 					{:else}
 						<img
-							src={`${WEBUI_API_BASE_URL}/users/${message.reply_to_message.user?.id}/profile/image`}
+							src={`${ANSWERAI_API_BASE_URL}/users/${message.reply_to_message.user?.id}/profile/image`}
 							alt={message.reply_to_message.user?.name ?? $i18n.t('Unknown User')}
 							class="size-4 ml-0.5 rounded-full object-cover"
 						/>
@@ -273,14 +273,14 @@
 				{#if showUserProfile}
 					{#if message?.meta?.model_id}
 						<img
-							src={`${WEBUI_API_BASE_URL}/models/model/profile/image?id=${message.meta.model_id}`}
+							src={`${ANSWERAI_API_BASE_URL}/models/model/profile/image?id=${message.meta.model_id}`}
 							alt={message.meta.model_name ?? message.meta.model_id}
 							class="size-8 translate-y-1 ml-0.5 object-cover rounded-full"
 						/>
 					{:else}
 						<ProfilePreview user={message.user}>
 							<ProfileImage
-								src={`${WEBUI_API_BASE_URL}/users/${message.user.id}/profile/image`}
+								src={`${ANSWERAI_API_BASE_URL}/users/${message.user.id}/profile/image`}
 								className={'size-8 ml-0.5'}
 							/>
 						</ProfilePreview>
@@ -346,7 +346,7 @@
 							{@const fileUrl =
 								file.url.startsWith('data') || file.url.startsWith('http')
 									? file.url
-									: `${WEBUI_API_BASE_URL}/files/${file.url}${file?.content_type ? '/content' : ''}`}
+									: `${ANSWERAI_API_BASE_URL}/files/${file.url}${file?.content_type ? '/content' : ''}`}
 							<div>
 								{#if file.type === 'image' || (file?.content_type ?? '').startsWith('image/')}
 									<Image src={fileUrl} alt={file.name} imageClassName=" max-h-96 rounded-lg" />
