@@ -1,8 +1,8 @@
 [project]
-name = "open-webui"
-description = "Open WebUI"
+name = "answerai"
+description = "ANSWERAI"
 authors = [
-    { name = "Timothy Jaeryang Baek", email = "tim@openwebui.com" }
+    { name = "ANSWERAI Team", email = "support@answerai.in" }
 ]
 license = { file = "LICENSE" }
 dependencies = [
@@ -162,7 +162,7 @@ all = [
 ]
 
 [project.scripts]
-open-webui = "open_webui:app"
+answerai = "open_webui:app"
 
 [build-system]
 requires = ["hatchling"]
