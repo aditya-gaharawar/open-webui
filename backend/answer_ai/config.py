@@ -1125,7 +1125,9 @@ TOOL_SERVER_CONNECTIONS = PersistentConfig(
 ####################################
 
 
-ANSWERAI_URL = PersistentConfig("ANSWERAI_URL", "answerai.url", os.environ.get("ANSWERAI_URL", ""))
+ANSWERAI_URL = PersistentConfig(
+    "ANSWERAI_URL", "answerai.url", os.environ.get("ANSWERAI_URL", "")
+)
 
 
 ENABLE_SIGNUP = PersistentConfig(

@@ -6,32 +6,35 @@ Your codebase has been **completely white-labeled** from OpenWebUI to AnswerAI.
 
 ## 📋 Key Replacements
 
-| Old | New |
-|-----|-----|
-| `open_webui` | `answer_ai` |
-| `openwebui` | `answerai` |
-| `open-webui` | `answer-ai` |
-| `Open WebUI` | `AnswerAI` |
-| `WebUI` | `AnswerAI` |
-| `WEBUI_*` | `ANSWERAI_*` |
-| `webui.db` | `answerai.db` |
+| Old                 | New                    |
+| ------------------- | ---------------------- |
+| `open_webui`        | `answer_ai`            |
+| `openwebui`         | `answerai`             |
+| `open-webui`        | `answer-ai`            |
+| `Open WebUI`        | `AnswerAI`             |
+| `WebUI`             | `AnswerAI`             |
+| `WEBUI_*`           | `ANSWERAI_*`           |
+| `webui.db`          | `answerai.db`          |
 | `.webui_secret_key` | `.answerai_secret_key` |
 
 ## 🚀 Quick Start Commands
 
 ### Development
+
 ```bash
 cd /workspace/project/answer-ai/backend
 python -m answer_ai.main
 ```
 
 ### Testing
+
 ```bash
 cd /workspace/project/answer-ai
 pytest backend/answer_ai/test/
 ```
 
 ### Docker
+
 ```bash
 cd /workspace/project/answer-ai
 docker-compose up
@@ -102,11 +105,13 @@ Read these files for complete details:
 If migrating from an existing OpenWebUI installation:
 
 1. **Rename database file:**
+
    ```bash
    mv webui.db answerai.db
    ```
 
 2. **Rename secret key:**
+
    ```bash
    mv .webui_secret_key .answerai_secret_key
    ```
@@ -114,10 +119,11 @@ If migrating from an existing OpenWebUI installation:
 3. **Update environment variables** in your `.env` or `docker-compose.yml`
 
 4. **Update Python imports** in any custom code:
+
    ```python
    # Old
    from open_webui.models.users import Users
-   
+
    # New
    from answer_ai.models.users import Users
    ```

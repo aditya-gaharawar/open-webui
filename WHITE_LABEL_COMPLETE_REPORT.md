@@ -10,20 +10,21 @@ Successfully completed comprehensive white-labeling of the entire codebase from 
 
 ### 🔄 Naming Convention Replacements
 
-| Old Name | New Name | Context |
-|----------|----------|---------|
-| `open_webui` | `answer_ai` | Python package names, imports |
-| `openwebui` | `answerai` | Configuration values, URLs |
-| `open-webui` | `answer-ai` | Repository names, URLs, kebab-case |
-| `Open WebUI` | `AnswerAI` | Display names, branding |
-| `OpenWebUI` | `AnswerAI` | Camel case references |
-| `OPEN_ANSWERAI_` | `ANSWER_AI_` | Environment variable prefixes |
+| Old Name         | New Name     | Context                            |
+| ---------------- | ------------ | ---------------------------------- |
+| `open_webui`     | `answer_ai`  | Python package names, imports      |
+| `openwebui`      | `answerai`   | Configuration values, URLs         |
+| `open-webui`     | `answer-ai`  | Repository names, URLs, kebab-case |
+| `Open WebUI`     | `AnswerAI`   | Display names, branding            |
+| `OpenWebUI`      | `AnswerAI`   | Camel case references              |
+| `OPEN_ANSWERAI_` | `ANSWER_AI_` | Environment variable prefixes      |
 
 ---
 
 ## 📁 Directory Structure Changes
 
 ### Before:
+
 ```
 /workspace/project/open-webui/
 └── backend/
@@ -36,6 +37,7 @@ Successfully completed comprehensive white-labeling of the entire codebase from 
 ```
 
 ### After:
+
 ```
 /workspace/project/answer-ai/
 └── backend/
@@ -52,11 +54,12 @@ Successfully completed comprehensive white-labeling of the entire codebase from 
 ## 📝 File Categories Updated
 
 ### 1. Python Backend (141 files) ✅
+
 - **Core modules**: `main.py`, `config.py`, `env.py`, `functions.py`, `tasks.py`
 - **Models (18 files)**: users, chats, files, folders, functions, groups, etc.
 - **Routers (21 files)**: All API endpoints (auths, channels, chats, configs, etc.)
 - **Utils (24 files)**: auth, middleware, embeddings, oauth, redis, etc.
-- **Retrieval system (40+ files)**: 
+- **Retrieval system (40+ files)**:
   - Vector databases: Chroma, Milvus, Qdrant, Pinecone, OpenSearch, etc.
   - Web search engines: Google, Bing, Brave, Tavily, DuckDuckGo, etc.
 - **Socket/WebSocket (2 files)**
@@ -64,16 +67,19 @@ Successfully completed comprehensive white-labeling of the entire codebase from 
 - **Migrations (10+ files)**
 
 **Changes:**
+
 - All imports: `from open_webui.xxx import yyy` → `from answer_ai.xxx import yyy`
 - String literals: `"open_webui"` → `"answer_ai"`
 - Environment variables: `OPEN_ANSWERAI_` → `ANSWER_AI_`
 
 ### 2. Frontend Files (Svelte/JS/TS) ✅
+
 - **3 Svelte files** updated
 - **JavaScript/TypeScript** configuration files updated
 - All references to `openwebui` → `answerai`
 
 ### 3. Configuration Files ✅
+
 - **pyproject.toml**: Package name changed to `answerai`
 - **package.json**: Package name changed to `answerai`
 - **Docker Compose files**: All YAML files updated
@@ -81,13 +87,15 @@ Successfully completed comprehensive white-labeling of the entire codebase from 
 - **.env.example**: No OpenWebUI-specific variables (kept generic)
 
 ### 4. Shell Scripts & Batch Files ✅
+
 - **backend/start.sh**: Updated uvicorn command to `answer_ai.main:app`
 - **backend/dev.sh**: Updated uvicorn command to `answer_ai.main:app`
 - **backend/start_windows.bat**: Updated uvicorn command to `answer_ai.main:app`
 - **Other shell scripts**: All references updated
 
 ### 5. Documentation Files ✅
-- **README.md**: 
+
+- **README.md**:
   - Title: `# ANSWERAI 👋`
   - All branding updated to AnswerAI
   - Links updated to `answerai.in`, `answerai.com`
@@ -95,11 +103,13 @@ Successfully completed comprehensive white-labeling of the entire codebase from 
 - **Other .md files**: All references updated
 
 ### 6. Docker & Container Files ✅
+
 - **Dockerfile**: All references updated
-- **docker-compose*.yaml**: All files updated
+- **docker-compose\*.yaml**: All files updated
 - **.dockerignore**: Updated
 
 ### 7. Build & Tool Configuration ✅
+
 - **Makefile**: All targets updated
 - **hatch_build.py**: Build configuration updated
 - **tsconfig.json**: TypeScript config updated
@@ -108,10 +118,12 @@ Successfully completed comprehensive white-labeling of the entire codebase from 
 - **tailwind.config.js**: Tailwind config updated
 
 ### 8. Testing Files ✅
+
 - **cypress.config.ts**: Test config updated
 - **Test directories**: All test files updated
 
 ### 9. Ignore Files ✅
+
 - **.gitignore**: Updated patterns
 - **.dockerignore**: Updated patterns
 - **.eslintignore**: Updated patterns
@@ -141,6 +153,7 @@ Result: 0 occurrences ✅
 ### Sample File Verification:
 
 #### backend/answer_ai/main.py:
+
 ```python
 from answer_ai.utils import logger
 from answer_ai.utils.audit import AuditLevel, AuditLoggingMiddleware
@@ -151,6 +164,7 @@ from answer_ai.config import (...)
 ```
 
 #### pyproject.toml:
+
 ```toml
 [project]
 name = "answerai"
@@ -163,6 +177,7 @@ answerai = "answer_ai:app"
 ```
 
 #### package.json:
+
 ```json
 {
   "name": "answerai",
@@ -172,6 +187,7 @@ answerai = "answer_ai:app"
 ```
 
 #### backend/start.sh:
+
 ```bash
 exec "$PYTHON_CMD" -m uvicorn answer_ai.main:app \
     --host "$HOST" \
@@ -185,18 +201,18 @@ exec "$PYTHON_CMD" -m uvicorn answer_ai.main:app \
 
 ### Files Updated by Type:
 
-| File Type | Count | Status |
-|-----------|-------|--------|
-| Python files (*.py) | 141 | ✅ Complete |
-| JavaScript/TypeScript (*.js, *.ts) | ~30 | ✅ Complete |
-| Svelte files (*.svelte) | 3 | ✅ Complete |
-| Configuration files (*.json, *.toml, *.yaml) | ~20 | ✅ Complete |
-| Shell scripts (*.sh, *.bat) | 8 | ✅ Complete |
-| Documentation (*.md, *.txt) | 10 | ✅ Complete |
-| Docker files | 10 | ✅ Complete |
-| Ignore files | 4 | ✅ Complete |
-| Build configs | 8 | ✅ Complete |
-| Other files | ~18 | ✅ Complete |
+| File Type                                     | Count | Status      |
+| --------------------------------------------- | ----- | ----------- |
+| Python files (\*.py)                          | 141   | ✅ Complete |
+| JavaScript/TypeScript (_.js, _.ts)            | ~30   | ✅ Complete |
+| Svelte files (\*.svelte)                      | 3     | ✅ Complete |
+| Configuration files (_.json, _.toml, \*.yaml) | ~20   | ✅ Complete |
+| Shell scripts (_.sh, _.bat)                   | 8     | ✅ Complete |
+| Documentation (_.md, _.txt)                   | 10    | ✅ Complete |
+| Docker files                                  | 10    | ✅ Complete |
+| Ignore files                                  | 4     | ✅ Complete |
+| Build configs                                 | 8     | ✅ Complete |
+| Other files                                   | ~18   | ✅ Complete |
 
 **Total Files Updated: 252+** ✅
 
@@ -220,33 +236,39 @@ exec "$PYTHON_CMD" -m uvicorn answer_ai.main:app \
 ## 📋 What Was Changed (Detailed Breakdown)
 
 ### Code & Imports
+
 - Python imports: `from open_webui.xxx` → `from answer_ai.xxx`
 - Python references: `open_webui.xxx` → `answer_ai.xxx`
 - String literals: `"open_webui"` → `"answer_ai"`
 - String literals: `'open_webui'` → `'answer_ai'`
 
 ### Configuration & Metadata
+
 - Package name in pyproject.toml: `open-webui` → `answerai`
 - Package name in package.json: `open-webui` → `answerai`
 - Script entry points: `open_webui:app` → `answer_ai:app`
 - Author information: Updated to `ANSWERAI Team`
 
 ### Environment Variables
+
 - Prefix: `OPEN_ANSWERAI_*` → `ANSWER_AI_*`
 - All environment variable references in code updated
 
 ### URLs & Links
+
 - `open-webui.io` → `answer-ai.io`
 - `openwebui.com` → `answerai.com`
 - GitHub links: Updated to reflect new repository structure
 
 ### Display Text & Branding
+
 - Application name: "Open WebUI" → "AnswerAI"
 - All user-facing text updated
 - README title and badges updated
 - Documentation references updated
 
 ### File System
+
 - Directory: `backend/open_webui/` → `backend/answer_ai/`
 - Repository: `open-webui/` → `answer-ai/`
 
@@ -274,6 +296,7 @@ exec "$PYTHON_CMD" -m uvicorn answer_ai.main:app \
 **The codebase is now 100% white-labeled to AnswerAI!**
 
 All references to "OpenWebUI", "Open WebUI", "open_webui", "openwebui", and "open-webui" have been systematically replaced with the appropriate AnswerAI variants:
+
 - **answer_ai** (for Python modules)
 - **answerai** (for package names)
 - **answer-ai** (for URLs and repository names)
@@ -294,17 +317,20 @@ All references to "OpenWebUI", "Open WebUI", "open_webui", "openwebui", and "ope
 ## 🛠️ Technical Notes
 
 ### Method Used:
+
 - Systematic `sed` replacements across all file types
 - Pattern-specific replacements to handle different naming conventions
 - Directory renaming after content updates to avoid path issues
 - Verification steps to ensure completeness
 
 ### Files Excluded:
+
 - `.git/` directory (version control internals)
 - `node_modules/` (if present - external dependencies)
 - `.venv/` (if present - Python virtual environment)
 
 ### Patterns Replaced:
+
 1. `open_webui` → `answer_ai` (Python naming)
 2. `openwebui` → `answerai` (compact naming)
 3. `open-webui` → `answer-ai` (kebab-case)
@@ -351,4 +377,3 @@ All references to "OpenWebUI", "Open WebUI", "open_webui", "openwebui", and "ope
 **Generated on**: 2025-12-29  
 **Status**: ✅ Complete  
 **Quality**: 100% Coverage
-

@@ -10,15 +10,15 @@ Successfully transformed the entire codebase from **OpenWebUI** / **open_webui**
 
 ## Final Statistics
 
-| Metric | Count |
-|--------|-------|
-| **Total Files Modified** | 152+ |
-| **Total Occurrences Replaced** | 637+ |
-| **Python Files Updated** | 141 |
-| **Frontend Files Updated** | 11+ |
-| **Configuration Files** | 8+ |
-| **Documentation Files** | 3 |
-| **Remaining References** | 3 (external service only) |
+| Metric                         | Count                     |
+| ------------------------------ | ------------------------- |
+| **Total Files Modified**       | 152+                      |
+| **Total Occurrences Replaced** | 637+                      |
+| **Python Files Updated**       | 141                       |
+| **Frontend Files Updated**     | 11+                       |
+| **Configuration Files**        | 8+                        |
+| **Documentation Files**        | 3                         |
+| **Remaining References**       | 3 (external service only) |
 
 ---
 
@@ -26,20 +26,20 @@ Successfully transformed the entire codebase from **OpenWebUI** / **open_webui**
 
 ### Core Replacements Applied
 
-| Original | Replaced With | Usage Context |
-|----------|---------------|---------------|
-| `open_webui` | `answer_ai` | Python package names, module imports |
-| `openwebui` | `answerai` | String literals, configuration keys |
-| `open-webui` | `answer-ai` | Repository name, kebab-case references |
-| `Open WebUI` | `AnswerAI` | Display names, user-facing text |
-| `OpenWebUI` | `AnswerAI` | Camel case branding |
-| `WebUI` | `AnswerAI` | Shortened display names |
-| `webui` | `answerai` | Lowercase references, variable names |
-| `OPEN_WEBUI_*` | `ANSWER_AI_*` | Environment variables |
-| `WEBUI_*` | `ANSWERAI_*` | Environment variables, constants |
-| `webui.db` | `answerai.db` | Database file references |
-| `.webui_secret_key` | `.answerai_secret_key` | Secret key file |
-| `webui.sh` | `answerai.sh` | Shell script references |
+| Original            | Replaced With          | Usage Context                          |
+| ------------------- | ---------------------- | -------------------------------------- |
+| `open_webui`        | `answer_ai`            | Python package names, module imports   |
+| `openwebui`         | `answerai`             | String literals, configuration keys    |
+| `open-webui`        | `answer-ai`            | Repository name, kebab-case references |
+| `Open WebUI`        | `AnswerAI`             | Display names, user-facing text        |
+| `OpenWebUI`         | `AnswerAI`             | Camel case branding                    |
+| `WebUI`             | `AnswerAI`             | Shortened display names                |
+| `webui`             | `answerai`             | Lowercase references, variable names   |
+| `OPEN_WEBUI_*`      | `ANSWER_AI_*`          | Environment variables                  |
+| `WEBUI_*`           | `ANSWERAI_*`           | Environment variables, constants       |
+| `webui.db`          | `answerai.db`          | Database file references               |
+| `.webui_secret_key` | `.answerai_secret_key` | Secret key file                        |
+| `webui.sh`          | `answerai.sh`          | Shell script references                |
 
 ---
 
@@ -62,6 +62,7 @@ AFTER:
 ### 2. Python Backend (141 files) ✅
 
 **Updated Components:**
+
 - ✅ Main entry point: `backend/answer_ai/main.py`
 - ✅ Configuration: `backend/answer_ai/config.py`
 - ✅ Environment: `backend/answer_ai/env.py`
@@ -79,6 +80,7 @@ AFTER:
 ### 3. Frontend (11+ files) ✅
 
 **Updated Files:**
+
 - ✅ Constants: `src/lib/constants.ts`
   - `WEBUI_NAME` → `ANSWERAI_NAME`
   - `WEBUI_VERSION` → `ANSWERAI_VERSION`
@@ -100,12 +102,14 @@ AFTER:
 ### 4. Translations (30+ languages) ✅
 
 **Updated Keys:**
+
 - ✅ `webUIName` → `answeraiName`
 - ✅ `WEBUI_NAME` → `ANSWERAI_NAME`
 - ✅ `WebUI` → `AnswerAI` (all display text)
 - ✅ `webui.sh` → `answerai.sh` (in examples)
 
 **Languages Updated:**
+
 - Arabic, Bulgarian, Catalan, Chinese (Simplified & Traditional)
 - Czech, Danish, Dutch, English, Finnish, French
 - German, Greek, Hebrew, Hindi, Hungarian, Indonesian
@@ -246,13 +250,16 @@ grep -r "AnswerAI" --include="*.py" --include="*.svelte" | wc -l  # Should be 50
 Users upgrading from OpenWebUI need to be aware:
 
 1. **Database File**: System now looks for `answerai.db` instead of `webui.db`
+
    - Automatic migration may be needed
    - Backup `webui.db` before upgrading
 
 2. **Secret Key File**: System now uses `.answerai_secret_key` instead of `.webui_secret_key`
+
    - Existing installations should rename the file
 
 3. **Environment Variables**: Update all environment variables:
+
    - `WEBUI_*` → `ANSWERAI_*`
    - `OPEN_WEBUI_*` → `ANSWER_AI_*`
 
@@ -261,28 +268,31 @@ Users upgrading from OpenWebUI need to be aware:
 ### For Developers
 
 1. **Imports**: Update all Python imports:
+
    ```python
    # Old
    from open_webui.models.users import Users
-   
+
    # New
    from answer_ai.models.users import Users
    ```
 
 2. **Constants**: Update frontend constants:
+
    ```typescript
    // Old
    import { WEBUI_NAME, WEBUI_VERSION } from '$lib/constants';
-   
+
    // New
    import { ANSWERAI_NAME, ANSWERAI_VERSION } from '$lib/constants';
    ```
 
 3. **Tests**: Update test utilities:
+
    ```python
    # Old
    from open_webui.test.apps.webui import mock_webui_user
-   
+
    # New
    from answer_ai.test.apps.answerai import mock_answerai_user
    ```
@@ -324,6 +334,7 @@ answer-ai/
 ### Import Patterns
 
 **Python:**
+
 ```python
 from answer_ai.models.users import Users
 from answer_ai.utils.auth import decode_token
@@ -331,6 +342,7 @@ from answer_ai.config import VECTOR_DB
 ```
 
 **TypeScript/Svelte:**
+
 ```typescript
 import { ANSWERAI_NAME, ANSWERAI_VERSION } from '$lib/constants';
 ```

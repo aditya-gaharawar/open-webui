@@ -216,16 +216,19 @@ export const registerOAuthClient = async (
 	let error = null;
 
 	const searchParams = type ? `?type=${type}` : '';
-	const res = await fetch(`${ANSWERAI_API_BASE_URL}/configs/oauth/clients/register${searchParams}`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`
-		},
-		body: JSON.stringify({
-			...formData
-		})
-	})
+	const res = await fetch(
+		`${ANSWERAI_API_BASE_URL}/configs/oauth/clients/register${searchParams}`,
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`
+			},
+			body: JSON.stringify({
+				...formData
+			})
+		}
+	)
 		.then(async (res) => {
 			if (!res.ok) throw await res.json();
 			return res.json();
