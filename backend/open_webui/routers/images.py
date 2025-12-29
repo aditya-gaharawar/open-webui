@@ -6,10 +6,8 @@ import json
 import logging
 import mimetypes
 import re
-from pathlib import Path
 from typing import Optional
 
-from urllib.parse import quote
 import requests
 from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
@@ -51,6 +49,7 @@ def set_image_model(request: Request, model: str):
             r = requests.get(
                 url=f"{request.app.state.config.AUTOMATIC1111_BASE_URL}/sdapi/v1/options",
                 headers={"authorization": api_auth},
+                timeout=30,
             )
             options = r.json()
             if model != options["sd_model_checkpoint"]:
@@ -59,6 +58,7 @@ def set_image_model(request: Request, model: str):
                     url=f"{request.app.state.config.AUTOMATIC1111_BASE_URL}/sdapi/v1/options",
                     json=options,
                     headers={"authorization": api_auth},
+                    timeout=30,
                 )
         except Exception as e:
             log.debug(f"{e}")
@@ -93,12 +93,13 @@ def get_image_model(request):
             r = requests.get(
                 url=f"{request.app.state.config.AUTOMATIC1111_BASE_URL}/sdapi/v1/options",
                 headers={"authorization": get_automatic1111_api_auth(request)},
+                timeout=30,
             )
             options = r.json()
             return options["sd_model_checkpoint"]
         except Exception as e:
             request.app.state.config.ENABLE_IMAGE_GENERATION = False
-            raise HTTPException(status_code=400, detail=ERROR_MESSAGES.DEFAULT(e))
+            raise HTTPException(status_code=400, detail=ERROR_MESSAGES.DEFAULT(e)) from e
 
 
 class ImagesConfig(BaseModel):
@@ -348,12 +349,13 @@ async def verify_url(request: Request, user=Depends(get_admin_user)):
             r = requests.get(
                 url=f"{request.app.state.config.AUTOMATIC1111_BASE_URL}/sdapi/v1/options",
                 headers={"authorization": get_automatic1111_api_auth(request)},
+                timeout=30,
             )
             r.raise_for_status()
             return True
-        except Exception:
+        except Exception as exc:
             request.app.state.config.ENABLE_IMAGE_GENERATION = False
-            raise HTTPException(status_code=400, detail=ERROR_MESSAGES.INVALID_URL)
+            raise HTTPException(status_code=400, detail=ERROR_MESSAGES.INVALID_URL) from exc
     elif request.app.state.config.IMAGE_GENERATION_ENGINE == "comfyui":
         headers = None
         if request.app.state.config.COMFYUI_API_KEY:
@@ -364,12 +366,13 @@ async def verify_url(request: Request, user=Depends(get_admin_user)):
             r = requests.get(
                 url=f"{request.app.state.config.COMFYUI_BASE_URL}/object_info",
                 headers=headers,
+                timeout=30,
             )
             r.raise_for_status()
             return True
-        except Exception:
+        except Exception as exc:
             request.app.state.config.ENABLE_IMAGE_GENERATION = False
-            raise HTTPException(status_code=400, detail=ERROR_MESSAGES.INVALID_URL)
+            raise HTTPException(status_code=400, detail=ERROR_MESSAGES.INVALID_URL) from exc
     else:
         return True
 
@@ -396,6 +399,7 @@ def get_models(request: Request, user=Depends(get_verified_user)):
             r = requests.get(
                 url=f"{request.app.state.config.COMFYUI_BASE_URL}/object_info",
                 headers=headers,
+                timeout=30,
             )
             info = r.json()
 
@@ -444,6 +448,7 @@ def get_models(request: Request, user=Depends(get_verified_user)):
             r = requests.get(
                 url=f"{request.app.state.config.AUTOMATIC1111_BASE_URL}/sdapi/v1/sd-models",
                 headers={"authorization": get_automatic1111_api_auth(request)},
+                timeout=30,
             )
             models = r.json()
             return list(
@@ -454,7 +459,7 @@ def get_models(request: Request, user=Depends(get_verified_user)):
             )
     except Exception as e:
         request.app.state.config.ENABLE_IMAGE_GENERATION = False
-        raise HTTPException(status_code=400, detail=ERROR_MESSAGES.DEFAULT(e))
+        raise HTTPException(status_code=400, detail=ERROR_MESSAGES.DEFAULT(e)) from e
 
 
 class CreateImageForm(BaseModel):
@@ -473,9 +478,9 @@ def get_image_data(data: str, headers=None):
         if data.startswith("http://") or data.startswith("https://"):
             validate_url(data)
             if headers:
-                r = requests.get(data, headers=headers)
+                r = requests.get(data, headers=headers, timeout=30)
             else:
-                r = requests.get(data)
+                r = requests.get(data, timeout=30)
 
             r.raise_for_status()
             if r.headers["content-type"].split("/")[0] == "image":
@@ -799,11 +804,11 @@ async def image_generations(
             return images
     except Exception as e:
         error = e
-        if r != None:
+        if r is not None:
             data = r.json()
             if "error" in data:
                 error = data["error"]["message"]
-        raise HTTPException(status_code=400, detail=ERROR_MESSAGES.DEFAULT(error))
+        raise HTTPException(status_code=400, detail=ERROR_MESSAGES.DEFAULT(error)) from e
 
 
 class EditImageForm(BaseModel):
@@ -1030,7 +1035,7 @@ async def image_edits(
                     comfyui_images.append(res.get("name", file_item[1][0]))
             except Exception as e:
                 log.debug(f"Error uploading images to ComfyUI: {e}")
-                raise Exception("Failed to upload images to ComfyUI.")
+                raise Exception("Failed to upload images to ComfyUI.") from e
 
             data = {
                 "image": comfyui_images,
@@ -1093,7 +1098,7 @@ async def image_edits(
             return images
     except Exception as e:
         error = e
-        if r != None:
+        if r is not None:
             data = r.text
             try:
                 data = json.loads(data)
@@ -1102,4 +1107,4 @@ async def image_edits(
             except Exception:
                 error = data
 
-        raise HTTPException(status_code=400, detail=ERROR_MESSAGES.DEFAULT(error))
+        raise HTTPException(status_code=400, detail=ERROR_MESSAGES.DEFAULT(error)) from e
