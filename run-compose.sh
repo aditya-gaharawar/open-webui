@@ -72,7 +72,7 @@ usage() {
     echo "Options:"
     echo "  --enable-gpu[count=COUNT]  Enable GPU support with the specified count."
     echo "  --enable-api[port=PORT]    Enable API and expose it on the specified port."
-    echo "  --webui[port=PORT]         Set the port for the web user interface."
+    echo "  --answerai[port=PORT]         Set the port for the web user interface."
     echo "  --data[folder=PATH]        Bind mount for ollama data folder (by default will create the 'ollama' volume)."
     echo "  --playwright               Enable Playwright support for web scraping."
     echo "  --build                    Build the docker image before running the compose project."
@@ -85,9 +85,9 @@ usage() {
     echo "  $0 --enable-gpu[count=1]"
     echo "  $0 --enable-gpu[count=all]"
     echo "  $0 --enable-api[port=11435]"
-    echo "  $0 --enable-gpu[count=1] --enable-api[port=12345] --webui[port=3000]"
-    echo "  $0 --enable-gpu[count=1] --enable-api[port=12345] --webui[port=3000] --data[folder=./ollama-data]"
-    echo "  $0 --enable-gpu[count=1] --enable-api[port=12345] --webui[port=3000] --data[folder=./ollama-data] --build"
+    echo "  $0 --enable-gpu[count=1] --enable-api[port=12345] --answerai[port=3000]"
+    echo "  $0 --enable-gpu[count=1] --enable-api[port=12345] --answerai[port=3000] --data[folder=./ollama-data]"
+    echo "  $0 --enable-gpu[count=1] --enable-api[port=12345] --answerai[port=3000] --data[folder=./ollama-data] --build"
     echo ""
     echo "This script configures and runs a docker-compose setup with optional GPU support, API exposure, and web UI configuration."
     echo "About the gpu to use, the script automatically detects it using the "lspci" command."
@@ -97,7 +97,7 @@ usage() {
 # Default values
 gpu_count=1
 api_port=11435
-webui_port=3000
+answerai_port=3000
 headless=false
 build_image=false
 kill_compose=false
@@ -123,9 +123,9 @@ while [[ $# -gt 0 ]]; do
             value=$(extract_value "$key")
             api_port=${value:-11435}
             ;;
-        --webui*)
+        --answerai*)
             value=$(extract_value "$key")
-            webui_port=${value:-3000}
+            answerai_port=${value:-3000}
             ;;
         --data*)
             value=$(extract_value "$key")
@@ -190,8 +190,8 @@ else
     if [[ $enable_playwright == true ]]; then
         DEFAULT_COMPOSE_COMMAND+=" -f docker-compose.playwright.yaml"
     fi
-    if [[ -n $webui_port ]]; then
-        export ANSWERAI_PORT=$webui_port # Set ANSWERAI_PORT environment variable
+    if [[ -n $answerai_port ]]; then
+        export ANSWERAI_PORT=$answerai_port # Set ANSWERAI_PORT environment variable
     fi
     DEFAULT_COMPOSE_COMMAND+=" up -d"
     DEFAULT_COMPOSE_COMMAND+=" --remove-orphans"
@@ -208,7 +208,7 @@ echo -e "   ${GREEN}${BOLD}GPU Driver:${NC} ${OLLAMA_GPU_DRIVER:-Not Enabled}"
 echo -e "   ${GREEN}${BOLD}GPU Count:${NC} ${OLLAMA_GPU_COUNT:-Not Enabled}"
 echo -e "   ${GREEN}${BOLD}WebAPI Port:${NC} ${OLLAMA_WEBAPI_PORT:-Not Enabled}"
 echo -e "   ${GREEN}${BOLD}Data Folder:${NC} ${data_dir:-Using ollama volume}"
-echo -e "   ${GREEN}${BOLD}WebUI Port:${NC} $webui_port"
+echo -e "   ${GREEN}${BOLD}AnswerAI Port:${NC} $answerai_port"
 echo -e "   ${GREEN}${BOLD}Playwright:${NC} ${enable_playwright:-false}"
 echo
 

@@ -74,8 +74,8 @@
 				'system settings',
 				'theme',
 				'translate',
-				'webuisettings',
-				'webui settings'
+				'answeraisettings',
+				'answerai settings'
 			]
 		},
 		{
@@ -424,7 +424,7 @@
 			keywords: [
 				'about app',
 				'about me',
-				'about open webui',
+				'about answerai',
 				'about page',
 				'about us',
 				'aboutapp',

@@ -8,7 +8,7 @@
 	import FunctionEditor from '$lib/components/admin/Functions/FunctionEditor.svelte';
 	import { getModels } from '$lib/apis';
 	import { compareVersion, extractFrontmatter } from '$lib/utils';
-	import { WEBUI_VERSION } from '$lib/constants';
+	import { ANSWERAI_VERSION } from '$lib/constants';
 
 	const i18n = getContext('i18n');
 
@@ -20,13 +20,13 @@
 		console.log(data);
 
 		const manifest = extractFrontmatter(data.content);
-		if (compareVersion(manifest?.required_answerai_version ?? '0.0.0', WEBUI_VERSION)) {
+		if (compareVersion(manifest?.required_answerai_version ?? '0.0.0', ANSWERAI_VERSION)) {
 			console.log('Version is lower than required');
 			toast.error(
 				$i18n.t(
 					'ANSWERAI version (v{{ANSWERAI_VERSION}}) is lower than required version (v{{REQUIRED_VERSION}})',
 					{
-						ANSWERAI_VERSION: WEBUI_VERSION,
+						ANSWERAI_VERSION: ANSWERAI_VERSION,
 						REQUIRED_VERSION: manifest?.required_answerai_version ?? '0.0.0'
 					}
 				)

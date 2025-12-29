@@ -6,7 +6,7 @@
 	import { onMount, getContext, tick } from 'svelte';
 	const i18n = getContext('i18n');
 
-	import { WEBUI_NAME, config, mobile, models as _models, settings, user } from '$lib/stores';
+	import { ANSWERAI_NAME, config, mobile, models as _models, settings, user } from '$lib/stores';
 	import {
 		createNewModel,
 		deleteAllModels,
@@ -37,7 +37,7 @@
 	import EllipsisHorizontal from '$lib/components/icons/EllipsisHorizontal.svelte';
 	import EyeSlash from '$lib/components/icons/EyeSlash.svelte';
 	import Eye from '$lib/components/icons/Eye.svelte';
-	import { WEBUI_API_BASE_URL, WEBUI_BASE_URL } from '$lib/constants';
+	import { ANSWERAI_API_BASE_URL, ANSWERAI_BASE_URL } from '$lib/constants';
 	import { goto } from '$app/navigation';
 
 	let shiftKey = false;
@@ -345,7 +345,7 @@
 										: 'opacity-50 dark:opacity-50'} "
 								>
 									<img
-										src={`${WEBUI_API_BASE_URL}/models/model/profile/image?id=${model.id}`}
+										src={`${ANSWERAI_API_BASE_URL}/models/model/profile/image?id=${model.id}`}
 										alt="modelfile profile"
 										class=" rounded-full w-full h-auto object-cover"
 									/>

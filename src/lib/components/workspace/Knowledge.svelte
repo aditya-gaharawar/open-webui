@@ -7,7 +7,7 @@
 	import { onMount, getContext, tick } from 'svelte';
 	const i18n = getContext('i18n');
 
-	import { WEBUI_NAME, knowledge, user } from '$lib/stores';
+	import { ANSWERAI_NAME, knowledge, user } from '$lib/stores';
 	import { deleteKnowledgeById, searchKnowledgeBases } from '$lib/apis/knowledge';
 
 	import { goto } from '$app/navigation';
@@ -112,7 +112,7 @@
 
 <svelte:head>
 	<title>
-		{$i18n.t('Knowledge')} • {$WEBUI_NAME}
+		{$i18n.t('Knowledge')} • {$ANSWERAI_NAME}
 	</title>
 </svelte:head>
 

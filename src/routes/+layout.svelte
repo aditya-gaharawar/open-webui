@@ -14,9 +14,9 @@
 		user,
 		settings,
 		theme,
-		WEBUI_NAME,
-		WEBUI_VERSION,
-		WEBUI_DEPLOYMENT_ID,
+		ANSWERAI_NAME,
+		ANSWERAI_VERSION,
+		ANSWERAI_DEPLOYMENT_ID,
 		mobile,
 		socket,
 		chatId,
@@ -48,7 +48,7 @@
 	import { getAllTags, getChatList } from '$lib/apis/chats';
 	import { chatCompletion } from '$lib/apis/openai';
 
-	import { WEBUI_API_BASE_URL, WEBUI_BASE_URL, WEBUI_HOSTNAME } from '$lib/constants';
+	import { ANSWERAI_API_BASE_URL, ANSWERAI_BASE_URL, ANSWERAI_HOSTNAME } from '$lib/constants';
 	import { bestMatchingLanguage } from '$lib/utils';
 	import { setTextScale } from '$lib/utils/text-scale';
 
@@ -95,7 +95,7 @@
 	const BREAKPOINT = 768;
 
 	const setupSocket = async (enableWebsocket) => {
-		const _socket = io(`${WEBUI_BASE_URL}` || undefined, {
+		const _socket = io(`${ANSWERAI_BASE_URL}` || undefined, {
 			reconnection: true,
 			reconnectionDelay: 1000,
 			reconnectionDelayMax: 5000,
@@ -119,8 +119,8 @@
 
 			if (version !== null || deploymentId !== null) {
 				if (
-					($WEBUI_VERSION !== null && version !== $WEBUI_VERSION) ||
-					($WEBUI_DEPLOYMENT_ID !== null && deploymentId !== $WEBUI_DEPLOYMENT_ID)
+					($ANSWERAI_VERSION !== null && version !== $ANSWERAI_VERSION) ||
+					($ANSWERAI_DEPLOYMENT_ID !== null && deploymentId !== $ANSWERAI_DEPLOYMENT_ID)
 				) {
 					await unregisterServiceWorkers();
 					location.href = location.href;
@@ -137,11 +137,11 @@
 			}, 30000);
 
 			if (deploymentId !== null) {
-				WEBUI_DEPLOYMENT_ID.set(deploymentId);
+				ANSWERAI_DEPLOYMENT_ID.set(deploymentId);
 			}
 
 			if (version !== null) {
-				WEBUI_VERSION.set(version);
+				ANSWERAI_VERSION.set(version);
 			}
 
 			console.log('version', version);
@@ -358,7 +358,7 @@
 						if ($settings?.notificationEnabled ?? false) {
 							new Notification(`${title} • ANSWERAI`, {
 								body: content,
-								icon: `${WEBUI_BASE_URL}/static/favicon.png`
+								icon: `${ANSWERAI_BASE_URL}/static/favicon.png`
 							});
 						}
 					}
@@ -561,7 +561,7 @@
 					if ($settings?.notificationEnabled ?? false) {
 						new Notification(`${title} • ANSWERAI`, {
 							body: data?.content,
-							icon: `${WEBUI_API_BASE_URL}/users/${data?.user?.id}/profile/image`
+							icon: `${ANSWERAI_API_BASE_URL}/users/${data?.user?.id}/profile/image`
 						});
 					}
 				}
@@ -722,8 +722,8 @@
 
 		let backendConfig = null;
 		try {
-			console.log('WEBUI_BASE_URL:', WEBUI_BASE_URL);
-			console.log('WEBUI_API_BASE_URL:', WEBUI_API_BASE_URL);
+			console.log('ANSWERAI_BASE_URL:', ANSWERAI_BASE_URL);
+			console.log('ANSWERAI_API_BASE_URL:', ANSWERAI_API_BASE_URL);
 			backendConfig = await getBackendConfig();
 			console.log('Backend config:', backendConfig);
 		} catch (error) {
@@ -748,7 +748,7 @@
 		if (backendConfig) {
 			// Save Backend Status to Store
 			await config.set(backendConfig);
-			await WEBUI_NAME.set(backendConfig.name);
+			await ANSWERAI_NAME.set(backendConfig.name);
 
 			if ($config) {
 				await setupSocket($config.features?.enable_websocket ?? true);
@@ -823,15 +823,15 @@
 </script>
 
 <svelte:head>
-	<title>{$WEBUI_NAME}</title>
-	<link crossorigin="anonymous" rel="icon" href="{WEBUI_BASE_URL}/static/favicon.png" />
+	<title>{$ANSWERAI_NAME}</title>
+	<link crossorigin="anonymous" rel="icon" href="{ANSWERAI_BASE_URL}/static/favicon.png" />
 
-	<meta name="apple-mobile-web-app-title" content={$WEBUI_NAME} />
-	<meta name="description" content={$WEBUI_NAME} />
+	<meta name="apple-mobile-web-app-title" content={$ANSWERAI_NAME} />
+	<meta name="description" content={$ANSWERAI_NAME} />
 	<link
 		rel="search"
 		type="application/opensearchdescription+xml"
-		title={$WEBUI_NAME}
+		title={$ANSWERAI_NAME}
 		href="/opensearch.xml"
 		crossorigin="use-credentials"
 	/>

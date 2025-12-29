@@ -580,7 +580,7 @@
 										<div
 											class={`text-xs mt-1 ${($settings?.highContrastMode ?? false) ? 'text-gray-800 dark:text-gray-100' : 'text-gray-500'}`}
 										>
-											{$i18n.t(`WebUI will make requests to "{{url}}"`, {
+											{$i18n.t(`AnswerAI will make requests to "{{url}}"`, {
 												url: path.includes('://')
 													? path
 													: `${url}${path.startsWith('/') ? '' : '/'}${path}`

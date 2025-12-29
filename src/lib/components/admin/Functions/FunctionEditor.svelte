@@ -70,7 +70,7 @@ class Filter:
 
     def __init__(self):
         # Indicates custom file handling logic. This flag helps disengage default routines in favor of custom
-        # implementations, informing the WebUI to defer file-related operations to designated methods within this class.
+        # implementations, informing the AnswerAI to defer file-related operations to designated methods within this class.
         # Alternatively, you can remove the files directly from the body in from the inlet hook
         # self.file_handler = True
 
@@ -111,7 +111,7 @@ class Filter:
 
 	const _boilerplate = `from pydantic import BaseModel
 from typing import Optional, Union, Generator, Iterator
-from open_webui.utils.misc import get_last_user_message
+from answer_ai.utils.misc import get_last_user_message
 
 import os
 import requests
@@ -127,7 +127,7 @@ class Filter:
 
     def __init__(self):
         # Indicates custom file handling logic. This flag helps disengage default routines in favor of custom
-        # implementations, informing the WebUI to defer file-related operations to designated methods within this class.
+        # implementations, informing the AnswerAI to defer file-related operations to designated methods within this class.
         # Alternatively, you can remove the files directly from the body in from the inlet hook
         self.file_handler = True
 
