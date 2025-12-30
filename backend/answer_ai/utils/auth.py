@@ -165,13 +165,13 @@ def get_password_hash(password: str) -> str:
 def validate_password(password: str) -> bool:
     # The password passed to bcrypt must be 72 bytes or fewer. If it is longer, it will be truncated before hashing.
     if len(password.encode("utf-8")) > 72:
-        raise Exception(
+        raise ValueError(
             ERROR_MESSAGES.PASSWORD_TOO_LONG,
         )
 
     if ENABLE_PASSWORD_VALIDATION:
         if not PASSWORD_VALIDATION_REGEX_PATTERN.match(password):
-            raise Exception(ERROR_MESSAGES.INVALID_PASSWORD())
+            raise ValueError(ERROR_MESSAGES.INVALID_PASSWORD())
 
     return True
 
