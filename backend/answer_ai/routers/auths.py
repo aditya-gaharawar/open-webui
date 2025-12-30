@@ -200,8 +200,11 @@ async def update_password(
         if user:
             try:
                 validate_password(form_data.password)
-            except Exception as e:
+            except ValueError as e:
                 raise HTTPException(400, detail=str(e))
+            except Exception as e:
+                log.error(f"Password validation internal error: {e}")
+                raise HTTPException(500, detail="Internal Server Error")
             hashed = get_password_hash(form_data.new_password)
             return Auths.update_user_password_by_id(user.id, hashed)
         else:
@@ -669,8 +672,11 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
     try:
         try:
             validate_password(form_data.password)
-        except Exception as e:
+        except ValueError as e:
             raise HTTPException(400, detail=str(e))
+        except Exception as e:
+            log.error(f"Password validation internal error: {e}")
+            raise HTTPException(500, detail="Internal Server Error")
 
         hashed = get_password_hash(form_data.password)
 
@@ -852,8 +858,11 @@ async def add_user(
     try:
         try:
             validate_password(form_data.password)
-        except Exception as e:
+        except ValueError as e:
             raise HTTPException(400, detail=str(e))
+        except Exception as e:
+            log.error(f"Password validation internal error: {e}")
+            raise HTTPException(500, detail="Internal Server Error")
 
         hashed = get_password_hash(form_data.password)
         user = Auths.insert_new_auth(
