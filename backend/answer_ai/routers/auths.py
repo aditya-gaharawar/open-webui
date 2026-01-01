@@ -219,6 +219,13 @@ async def ldap_auth(request: Request, response: Response, form_data: LdapForm):
     if not request.app.state.config.ENABLE_LDAP:
         raise HTTPException(400, detail="LDAP authentication is not enabled")
 
+    # Note: is_limited() increments the counter, effectively rate limiting attempts.
+    if signin_rate_limiter.is_limited(form_data.user.lower()):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
+        )
+
     if not ENABLE_PASSWORD_AUTH:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
