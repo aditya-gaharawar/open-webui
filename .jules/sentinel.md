@@ -1,0 +1,4 @@
+## 2025-05-15 - Missing Rate Limiting on Signup
+**Vulnerability:** The `signup` endpoint in `backend/answer_ai/routers/auths.py` was completely unprotected against automated abuse. An attacker could have created an unlimited number of accounts, potentially leading to denial of service, database exhaustion, or spam.
+**Learning:** While `signin` had rate limiting, `signup` was overlooked. This highlights the importance of auditing all public-facing endpoints for rate limiting, especially those that trigger resource-intensive operations like database writes and password hashing.
+**Prevention:** Always verify that *all* authentication-related endpoints (signin, signup, password reset, etc.) have appropriate rate limiting controls. Use `RateLimiter` with an appropriate key (e.g., IP address for signup) and limit/window.
