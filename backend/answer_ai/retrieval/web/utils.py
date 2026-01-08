@@ -2,6 +2,7 @@ import asyncio
 import logging
 import socket
 import ssl
+import ipaddress
 import urllib.parse
 import urllib.request
 from datetime import datetime, time, timedelta
@@ -137,6 +138,26 @@ def verify_ssl_cert(url: str) -> bool:
     except Exception as e:
         log.warning(f"SSL verification failed for {url}: {str(e)}")
         return False
+
+
+class SafeAiohttpTCPConnector(aiohttp.TCPConnector):
+    """Custom TCP connector to prevent DNS rebinding by checking resolved IPs."""
+
+    async def _resolve_host(self, host: str, port: int, traces=None):
+        res = await super()._resolve_host(host, port, traces)
+
+        if not ENABLE_RAG_LOCAL_WEB_FETCH:
+            for host_info in res:
+                ip_str = host_info["host"]
+                try:
+                    ip_obj = ipaddress.ip_address(ip_str)
+                    if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_link_local:
+                        log.warning(f"Blocked private IP connection to {host} ({ip_str})")
+                        raise ValueError(f"Blocked private IP connection to {host} ({ip_str})")
+                except ValueError:
+                    # Not a valid IP, might be a hostname? _resolve_host should return IPs.
+                    continue
+        return res
 
 
 class RateLimitMixin:
@@ -560,7 +581,10 @@ class SafeWebBaseLoader(WebBaseLoader):
     async def _fetch(
         self, url: str, retries: int = 3, cooldown: int = 2, backoff: float = 1.5
     ) -> str:
-        async with aiohttp.ClientSession(trust_env=self.trust_env) as session:
+        connector = SafeAiohttpTCPConnector()
+        async with aiohttp.ClientSession(
+            connector=connector, trust_env=self.trust_env
+        ) as session:
             for i in range(retries):
                 try:
                     kwargs: Dict = dict(
