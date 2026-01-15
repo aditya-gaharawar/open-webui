@@ -85,6 +85,16 @@ signin_rate_limiter = RateLimiter(
     redis_client=get_redis_client(), limit=5 * 3, window=60 * 3
 )
 
+# Signup rate limiter: 5 requests per hour (3600 seconds)
+signup_rate_limiter = RateLimiter(
+    redis_client=get_redis_client(), limit=5, window=3600
+)
+
+# Signin IP rate limiter: 50 requests per 10 minutes (600 seconds)
+signin_ip_rate_limiter = RateLimiter(
+    redis_client=get_redis_client(), limit=50, window=600
+)
+
 ############################
 # GetSessionUser
 ############################
@@ -568,6 +578,15 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
                 admin_email.lower(), lambda pw: verify_password(admin_password, pw)
             )
     else:
+        # Check IP-based rate limiting first
+        if signin_ip_rate_limiter.is_limited(
+            request.client.host if request.client else "127.0.0.1"
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail=ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
+            )
+
         if signin_rate_limiter.is_limited(form_data.email.lower()):
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
@@ -641,6 +660,14 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
 
 @router.post("/signup", response_model=SessionUserResponse)
 async def signup(request: Request, response: Response, form_data: SignupForm):
+    if signup_rate_limiter.is_limited(
+        request.client.host if request.client else "127.0.0.1"
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
+        )
+
     has_users = Users.has_users()
 
     if ANSWERAI_AUTH:
