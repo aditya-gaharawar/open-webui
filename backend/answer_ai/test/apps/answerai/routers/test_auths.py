@@ -194,3 +194,35 @@ class TestAuths(AbstractPostgresTest):
             response = self.fast_api_client.get(self.create_url("/api_key"))
         assert response.status_code == 200
         assert response.json() == {"api_key": "abc"}
+
+    def test_signup_rate_limit(self):
+        from answer_ai.routers.auths import signup_rate_limiter
+
+        # Reset limiter
+        if signup_rate_limiter.r:
+            signup_rate_limiter.r.flushall()
+        else:
+            signup_rate_limiter._memory_store.clear()
+
+        # 5 requests should be fine
+        for i in range(5):
+            response = self.fast_api_client.post(
+                self.create_url("/signup"),
+                json={
+                    "name": f"User {i}",
+                    "email": f"user{i}@example.com",
+                    "password": "password",
+                },
+            )
+            assert response.status_code != 429
+
+        # 6th request should fail
+        response = self.fast_api_client.post(
+            self.create_url("/signup"),
+            json={
+                "name": "User 6",
+                "email": "user6@example.com",
+                "password": "password",
+            },
+        )
+        assert response.status_code == 429
