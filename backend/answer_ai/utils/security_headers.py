@@ -36,7 +36,14 @@ def set_security_headers() -> Dict[str, str]:
     Returns:
         dict: A dictionary containing the security headers and their values.
     """
-    options = {}
+    # Default secure headers
+    options = {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "X-XSS-Protection": "1; mode=block",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+    }
+
     header_setters = {
         "CACHE_CONTROL": set_cache_control,
         "HSTS": set_hsts,
