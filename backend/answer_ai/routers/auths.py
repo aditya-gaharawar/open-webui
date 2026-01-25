@@ -85,6 +85,10 @@ signin_rate_limiter = RateLimiter(
     redis_client=get_redis_client(), limit=5 * 3, window=60 * 3
 )
 
+signup_rate_limiter = RateLimiter(
+    redis_client=get_redis_client(), limit=5, window=60 * 60
+)
+
 ############################
 # GetSessionUser
 ############################
@@ -661,6 +665,12 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
     if not validate_email_format(form_data.email.lower()):
         raise HTTPException(
             status.HTTP_400_BAD_REQUEST, detail=ERROR_MESSAGES.INVALID_EMAIL_FORMAT
+        )
+
+    if signup_rate_limiter.is_limited(request.client.host):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
         )
 
     if Users.get_user_by_email(form_data.email.lower()):
