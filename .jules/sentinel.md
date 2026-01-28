@@ -1,0 +1,4 @@
+## 2025-02-18 - Signup Rate Limiting & Testing
+**Vulnerability:** Missing rate limiting on `/signup` allowed unrestricted account creation.
+**Learning:** The `signup` endpoint logic automatically disables the signup feature (`ENABLE_SIGNUP = False`) if it detects that the first user was just created (`Users.has_users()` returns False). This creates a testing challenge where subsequent requests in a test loop fail with 403 Forbidden instead of hitting the rate limiter, unless the test environment properly mocks `Users.has_users()` to return `True` (simulating existing users) after the first request.
+**Prevention:** When testing authentication flows that have "first-run" logic, ensure the test state transitions correctly or mock the state to simulate a stable system to verify repetitive behaviors like rate limiting.
