@@ -194,3 +194,40 @@ class TestAuths(AbstractPostgresTest):
             response = self.fast_api_client.get(self.create_url("/api_key"))
         assert response.status_code == 200
         assert response.json() == {"api_key": "abc"}
+
+    def test_signup_rate_limit(self):
+        from unittest.mock import patch
+
+        # Force ENABLE_SIGNUP to True to allow multiple signups
+        original_signup_setting = self.fast_api_client.app.state.config.ENABLE_SIGNUP
+        self.fast_api_client.app.state.config.ENABLE_SIGNUP = True
+
+        try:
+            # Mock Users.has_users to return True so we don't trigger "first user" logic
+            # which might disable signup or make the user admin.
+            with patch("answer_ai.routers.auths.Users.has_users", return_value=True):
+                for i in range(10):
+                    response = self.fast_api_client.post(
+                        self.create_url("/signup"),
+                        json={
+                            "name": f"User {i}",
+                            "email": f"user{i}@example.com",
+                            "password": "password",
+                        },
+                    )
+
+                    if i < 5:
+                        # The limit is 5. Expect success (200)
+                        assert (
+                            response.status_code == 200
+                        ), f"Request {i} failed with {response.status_code}: {response.text}"
+                    else:
+                        # Expect rate limit (429)
+                        assert (
+                            response.status_code == 429
+                        ), f"Request {i} should have been rate limited but got {response.status_code}"
+        finally:
+            # Restore setting
+            self.fast_api_client.app.state.config.ENABLE_SIGNUP = (
+                original_signup_setting
+            )
