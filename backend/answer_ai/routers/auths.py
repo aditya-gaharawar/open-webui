@@ -85,6 +85,10 @@ signin_rate_limiter = RateLimiter(
     redis_client=get_redis_client(), limit=5 * 3, window=60 * 3
 )
 
+signup_rate_limiter = RateLimiter(
+    redis_client=get_redis_client(), limit=5, window=3600
+)
+
 ############################
 # GetSessionUser
 ############################
@@ -657,6 +661,12 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
             raise HTTPException(
                 status.HTTP_403_FORBIDDEN, detail=ERROR_MESSAGES.ACCESS_PROHIBITED
             )
+
+    if signup_rate_limiter.is_limited(f"signup:{request.client.host}"):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
+        )
 
     if not validate_email_format(form_data.email.lower()):
         raise HTTPException(
